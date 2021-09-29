@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_28_113131) do
+ActiveRecord::Schema.define(version: 2021_09_29_105105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,24 @@ ActiveRecord::Schema.define(version: 2021_09_28_113131) do
     t.index ["reset_password_token"], name: "index_logins_on_reset_password_token", unique: true
   end
 
+  create_table "master_skills", force: :cascade do |t|
+    t.string "skill_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "skills", force: :cascade do |t|
+    t.bigint "master_skill_id"
+    t.bigint "user_id"
+    t.float "self_rating"
+    t.integer "exp_month"
+    t.integer "exp_year"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["master_skill_id"], name: "index_skills_on_master_skill_id"
+    t.index ["user_id"], name: "index_skills_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -36,6 +54,11 @@ ActiveRecord::Schema.define(version: 2021_09_28_113131) do
     t.boolean "signup_request"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "login_id"
+    t.index ["login_id"], name: "index_users_on_login_id"
   end
 
+  add_foreign_key "skills", "master_skills"
+  add_foreign_key "skills", "users"
+  add_foreign_key "users", "logins"
 end
