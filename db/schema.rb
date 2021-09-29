@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_29_105105) do
+ActiveRecord::Schema.define(version: 2021_09_29_123113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,10 +27,42 @@ ActiveRecord::Schema.define(version: 2021_09_29_105105) do
     t.index ["reset_password_token"], name: "index_logins_on_reset_password_token", unique: true
   end
 
+  create_table "master_projects", force: :cascade do |t|
+    t.string "proj_name"
+    t.text "proj_description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "master_roles", force: :cascade do |t|
+    t.string "role_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "master_skills", force: :cascade do |t|
     t.string "skill_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.bigint "master_project_id"
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["master_project_id"], name: "index_projects_on_master_project_id"
+    t.index ["user_id"], name: "index_projects_on_user_id"
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "master_role_id"
+    t.boolean "admin", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["master_role_id"], name: "index_roles_on_master_role_id"
+    t.index ["user_id"], name: "index_roles_on_user_id"
   end
 
   create_table "skills", force: :cascade do |t|
@@ -58,6 +90,10 @@ ActiveRecord::Schema.define(version: 2021_09_29_105105) do
     t.index ["login_id"], name: "index_users_on_login_id"
   end
 
+  add_foreign_key "projects", "master_projects"
+  add_foreign_key "projects", "users"
+  add_foreign_key "roles", "master_roles"
+  add_foreign_key "roles", "users"
   add_foreign_key "skills", "master_skills"
   add_foreign_key "skills", "users"
   add_foreign_key "users", "logins"
