@@ -9,4 +9,11 @@ class User < ApplicationRecord
 
   has_one :role
   has_one :master_role, through: :role
+
+  has_many :endorser_association, foreign_key: :endorsee_id, class_name: "Endorsement"
+  has_many :endorsers, through: :endorser_association
+
+  has_many :endorsee_association, foreign_key: :endorser_id, class_name: "Endorsement"
+  has_many :endorsees, through: :endorsee_association
+
 end
