@@ -7,3 +7,18 @@
   display: flex;
   align-items: center;
 }
+
+body {
+  overflow-y: hidden; /* Hide vertical scrollbar */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+.card {
+  border-radius: 20px;
+  height: 500px;
+  width: 75%;
+}
+
+.form-control {
+  border-radius: 20px;
+}
