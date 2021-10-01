@@ -22,6 +22,14 @@ body {
   width: 75%;
 }
 
+.card.card-small {
+  height: 400px;
+}
+
+.card.card-long {
+  height: 760px;
+}
+
 .form-control {
   border-radius: 20px;
 }
