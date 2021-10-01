@@ -11,9 +11,12 @@
 body {
   overflow-y: hidden; /* Hide vertical scrollbar */
   overflow-x: hidden; /* Hide horizontal scrollbar */
+  background-color: whitesmoke;
+
 }
 
 .card {
+  border-style: none;
   border-radius: 20px;
   height: 500px;
   width: 75%;
