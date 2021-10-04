@@ -1,0 +1,34 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Skill Set</th>
+      <th scope="col">Role</th>
+      <th scope="col">Project</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <th scope="row"></th>
+        <td><%= user.first_name %></td>
+        <td><%= user.last_name %></td>
+        <td><%= Login.find(user.login_id).email %></td>
+        <td>
+          <% MasterSkill.find(user.master_skill_ids).each do |skill| %>
+            <%= skill.skill_name %>
+          <% end %>
+        </td>
+        <td><%= user.role %></td>
+        <td>
+          <% MasterProject.find(user.master_project_ids).each do |project| %>
+            <%= proj_name %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
