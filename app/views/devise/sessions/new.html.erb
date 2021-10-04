@@ -25,9 +25,20 @@
 <% end %>
 
 <div class="row justify-content-md-center vertical-center">
+  <div class="top">
+    <div class="text-center cover-header">
+      <h2>SKILLOPEDIA</h2>
+    </div>
+    <div class="text-center cover-sub-header">
+      <h4>Welcome Back!</h4>
+    </div>
+    <div class="text-center cover-text">
+      <p>Use these awesome forms for login or create</p>
+    </div>
+  </div>
   <div class="col-sm-6">
     <div class="card mx-auto">
-      <h2 class="text-center mt-4">Log in</h2>
+      <h2 class="text-center mt-4">Login</h2>
       <div class="card-body">
         <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
           <div class="field mb-3 mt-4">

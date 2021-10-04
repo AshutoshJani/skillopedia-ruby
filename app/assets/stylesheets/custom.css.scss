@@ -33,3 +33,22 @@ body {
 .form-control {
   border-radius: 20px;
 }
+
+.top {
+  background-image: url('/assets/login_background.jpg');
+  margin: 15px;
+  border-radius: 20px;
+  position: fixed;
+  top: 0px;
+  height: 400px;
+  width: 98%;
+}
+
+.cover-header, .cover-sub-header {
+  color: white;
+  margin-top: 40px;
+}
+
+.cover-text {
+  color: white;
+}
