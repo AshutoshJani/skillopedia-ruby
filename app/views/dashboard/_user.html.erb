@@ -22,10 +22,10 @@
             <%= skill.skill_name %>
           <% end %>
         </td>
-        <td><%= user.role %></td>
+        <td><%= user.master_role.role_name %></td>
         <td>
           <% MasterProject.find(user.master_project_ids).each do |project| %>
-            <%= proj_name %>
+            <%= project.proj_name %>
           <% end %>
         </td>
       </tr>
