@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
   def index
     users = User.all
     
-    render json: UserSerializer.new(users).serialized_json
+    render json: UserSerializer.new(users, options).serialized_json
   end
 
   def show
@@ -15,7 +15,7 @@ class Api::V1::UsersController < ApplicationController
   private 
 
   def options
-    @options ||= { include: [:login, :master_skills, :master_role, :master_projects] }
+    @options ||= { include: [:login] }
   end
 
 end

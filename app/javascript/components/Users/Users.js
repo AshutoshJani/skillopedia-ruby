@@ -2,31 +2,62 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Users = () => {
+
+  const users_url = axios.get('/api/v1/users');
+  const skills_url = axios.get('/api/v1/master_skills');
+  const role_url = axios.get('api/v1/master_role');
+  const projects_url = axios.get('api/v1/master_projects');
+
   const [users, setUsers] = useState([])
-  const [included, setIncluded] = useState([])
+  const [skills, setSkills] = useState([])
+  const [role, setRole] = useState([])
+  const [projects, setProjects] = useState([])
+  const [login, setLogin] = useState([])
 
   useEffect(() => {
-    axios.get('/api/v1/users.json')
-    .then(response => {
-      setIncluded(response.data.included)
-      setUsers(response.data.data)
-      console.log(users)
-      console.log(included)
-    })
-    .catch(response => console.log(response))
-  }, [users.length])
 
-  const listUser = users.map( user => {
-    return( <li key={user.attributes.login_id}>{user.attributes.first_name} {user.attributes.last_name}</li> )
-  })
+    axios.all([users_url, skills_url, role_url, projects_url])
+    .then(axios.spread((...response) => {
+      setUsers(response[0].data.data)
+      setLogin(response[0].data.included)
+      setSkills(response[1].data.data)
+      setRole(response[2].data.data)
+      setProjects(response[3].data.data)
+      console.log(users)
+      console.log(login)
+      console.log(skills)
+      console.log(role)
+      console.log(projects)
+    }))
+    .catch(response => console.log(response))
+
+    // axios.get('/api/v1/users.json')
+    // .then(response => {
+    //   setIncluded(response.data.included)
+    //   setUsers(response.data.data)
+    //   console.log(users)
+    //   console.log(included)
+    // })
+    // .catch(response => console.log(response))
+  }, [users.length, login.lenght, skills.length, role.length, projects.length])
+
+  // const listUser = users.map( user => {
+  //   return( <li key={user.attributes.login_id}>{user.attributes.first_name} {user.attributes.last_name}</li> )
+  // })
   
-  const listIncluded = included.map( inc => {
-    return(
-      <li>
-        {inc.type}
-      </li>
-    )
-  })
+  // const listIncluded = included.map( inc => {
+  //   return(
+  //     <li>
+  //       {inc.type}
+  //     </li>
+  //   )
+  // })
+
+  function FindObject(array, idToSearch) {
+    return array.filter(item => {
+      return item.attributes.id === idToSearch
+    })
+  };
 
   function CreateTable() {
     return(
@@ -46,8 +77,23 @@ const Users = () => {
               <tr>
                 <td>{user.attributes.first_name}</td>
                 <td>{user.attributes.last_name}</td>
+
+                {login.map((log, index) => {
+                  if (log.attributes.id == user.attributes.login_id) {
+                    return(
+                      <td>{log.attributes.email}</td>
+                    )
+                  }
+                })}
+
+                {user.relationships.master_skills.data.map((usr, index) => {
+                  return(
+                    <td>{FindObject(skills, usr.id)}</td>
+                  )
+                })}
+
               
-                {included.map((inc, index) => {
+                {/* {included.map((inc, index) => {
                   if (inc.id == user.attributes.login_id) {
                     if (inc.type == "login") {
                       return(
@@ -70,7 +116,7 @@ const Users = () => {
                       )
                     } 
                   }
-                })}
+                })} */}
 
               </tr>
             ))}
