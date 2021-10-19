@@ -23,11 +23,6 @@ const Users = () => {
       setSkills(response[1].data.data)
       setRole(response[2].data.data)
       setProjects(response[3].data.data)
-      console.log(users)
-      console.log(login)
-      console.log(skills)
-      console.log(role)
-      console.log(projects)
     }))
     .catch(response => console.log(response))
 
@@ -53,9 +48,15 @@ const Users = () => {
   //   )
   // })
 
-  function FindObject(array, idToSearch) {
-    return array.filter(item => {
-      return item.attributes.id === idToSearch
+  function FindProject(idToSearch) {
+    return projects.find(item => {
+      return item.attributes.id == idToSearch
+    })
+  };
+
+  function FindSkill(idToSearch) {
+    return skills.find(item => {
+      return item.attributes.id == idToSearch
     })
   };
 
@@ -86,11 +87,36 @@ const Users = () => {
                   }
                 })}
 
-                {user.relationships.master_skills.data.map((usr, index) => {
-                  return(
-                    <td>{FindObject(skills, usr.id)}</td>
-                  )
+                  <td>
+                    {user.relationships.master_skills.data.map((usr, index) => {
+                      let obj = FindSkill(usr.id);
+                      if (obj != null) {
+                        return(
+                          obj.attributes.skill_name + " "
+                        )
+                      }
+                    })}
+                  </td>
+
+                {role.map((rl, index) => {
+                  if (user.relationships.master_role.data.id == rl.attributes.id) {
+                    return(
+                      <td>{rl.attributes.role_name}</td>
+                    )
+                  }
                 })}
+
+                  <td>
+                    {user.relationships.master_projects.data.map((usr, index) => {
+                      let obj = FindProject(usr.id);
+                      if (obj != null) {
+                        return(
+                          obj.attributes.proj_name + " "
+                          // usr.id + " "
+                        )
+                      }
+                    })}
+                  </td>
 
               
                 {/* {included.map((inc, index) => {
