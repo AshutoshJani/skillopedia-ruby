@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
+import { Link } from "react-router-dom";
 
 const Users = () => {
 
@@ -61,6 +62,32 @@ const Users = () => {
     })
   };
 
+  function userShow(user) {
+    <>
+      <Link to={`/users/${user.id}`} />
+    </>
+  }
+
+  function CreateInterface() {
+    return(
+      <div className="container-fluid mt-4">
+        <div className="row">
+          <div className="col-2">
+            <h2>Skillopedia</h2>
+            <hr />
+            <nav class="nav flex-column nav-pill nav-fill mt-4">
+              <Link to="/" type="button" className="btn btn-outline-primary left-align active">Dashboard</Link>
+              {/* <Link to={`/users/${current_user}`}>Profile</Link> */}
+            </nav>
+          </div>
+          <div className="col-10 team-listing ">
+            <CreateTable />
+          </div>
+        </div>
+      </div>
+  )
+  }
+
   function CreateTable() {
     return(
       <table className="table table-hover ">
@@ -76,7 +103,7 @@ const Users = () => {
         </thead>
         <tbody>
             {users.map((user, index) => (
-              <tr>
+              <tr onClick={userShow(user)}>
                 <td>{user.attributes.first_name}</td>
                 <td>{user.attributes.last_name}</td>
 
@@ -154,10 +181,7 @@ const Users = () => {
 
   return (
     <div>
-      <h2>This is the Users#Index script</h2>
-      <div>
-        <CreateTable />
-      </div>
+      <CreateInterface />
     </div>
   )
 }
