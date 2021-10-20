@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const Users = () => {
+
+  const history = useHistory();
 
   const users_url = axios.get('/api/v1/users');
   const skills_url = axios.get('/api/v1/master_skills');
@@ -45,10 +47,8 @@ const Users = () => {
     })
   };
 
-  function userShow(user) {
-    <>
-      <Link to={`/users/${user.id}`} />
-    </>
+  function UserShow(user) {
+    history.push(`/users/${user.id}`)
   }
 
   function CreateInterface() {
@@ -86,7 +86,7 @@ const Users = () => {
         </thead>
         <tbody>
             {users.map((user, index) => (
-              <tr onClick={userShow(user)}>
+              <tr className="clickable" onClick={() => UserShow(user)}>
                 <td>{user.attributes.first_name}</td>
                 <td>{user.attributes.last_name}</td>
 
@@ -123,38 +123,10 @@ const Users = () => {
                       if (obj != null) {
                         return(
                           obj.attributes.proj_name + " "
-                          // usr.id + " "
                         )
                       }
                     })}
                   </td>
-
-              
-                {/* {included.map((inc, index) => {
-                  if (inc.id == user.attributes.login_id) {
-                    if (inc.type == "login") {
-                      return(
-                        <td>{inc.attributes.email}</td>
-                      )
-                    }
-                    if (inc.type == "master_skill") {
-                      return(
-                        <td>{inc.attributes.skill_name}</td>
-                      )
-                    }
-                    if (inc.type == "master_role") {
-                      return(
-                        <td>{inc.attributes.role_name}</td>
-                      )
-                    }
-                    if (inc.type == "master_project") {
-                      return(
-                        <td>{inc.attributes.proj_name}</td>
-                      )
-                    } 
-                  }
-                })} */}
-
               </tr>
             ))}
         </tbody>
