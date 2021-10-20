@@ -31,27 +31,7 @@ const Users = () => {
     }))
     .catch(response => console.log(response))
 
-    // axios.get('/api/v1/users.json')
-    // .then(response => {
-    //   setIncluded(response.data.included)
-    //   setUsers(response.data.data)
-    //   console.log(users)
-    //   console.log(included)
-    // })
-    // .catch(response => console.log(response))
   }, [users.length, login.lenght, skills.length, role.length, projects.length, current_user.length])
-
-  // const listUser = users.map( user => {
-  //   return( <li key={user.attributes.login_id}>{user.attributes.first_name} {user.attributes.last_name}</li> )
-  // })
-  
-  // const listIncluded = included.map( inc => {
-  //   return(
-  //     <li>
-  //       {inc.type}
-  //     </li>
-  //   )
-  // })
 
   function FindProject(idToSearch) {
     return projects.find(item => {
@@ -88,7 +68,7 @@ const Users = () => {
           </div>
         </div>
       </div>
-  )
+    )
   }
 
   function CreateTable() {
