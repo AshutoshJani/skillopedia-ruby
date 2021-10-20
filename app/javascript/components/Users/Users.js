@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import 'bootstrap/dist/css/bootstrap.css';
 
 const Users = () => {
 
@@ -62,7 +63,7 @@ const Users = () => {
 
   function CreateTable() {
     return(
-      <table>
+      <table className="table table-hover ">
         <thead>
           <tr>
             <td>First Name</td>
