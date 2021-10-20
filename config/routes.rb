@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :master_skills
       resources :master_projects
       resources :master_role
+      get '/current_user', to: 'current_user#index'
     end
   end
 
