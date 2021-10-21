@@ -9,7 +9,7 @@ class Api::V1::UsersController < ApplicationController
   def show
     user = User.find(params[:id])
 
-    render json: UserSerializer.new(user).serialized_json
+    render json: UserSerializer.new(user, options).serialized_json
   end
 
   private 
