@@ -34,6 +34,15 @@ body {
   border-radius: 20px;
 }
 
+.card.card-profile {
+  border-radius: 20px;
+  margin-top: 160px;
+  position: fixed;
+  width: 80%;
+  height: 100px;
+  width: 80%;
+}
+
 .top {
   background-image: url('/assets/login_background.jpg');
   margin: 15px;
@@ -42,6 +51,19 @@ body {
   top: 0px;
   height: 400px;
   width: 98%;
+}
+
+.top-profile {
+  background-image: url('/assets/login_background.jpg');
+  border-radius: 20px;
+  margin-right: 10px;
+  top: 0px;
+  height: 180px;
+  width: 80%;
+}
+
+.profile-cover {
+  color: white;
 }
 
 .cover-header, .cover-sub-header {

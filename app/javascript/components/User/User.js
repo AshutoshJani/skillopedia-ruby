@@ -34,6 +34,10 @@ const User = () => {
   }, [user.length, login.lenght, skills.length, role.length, projects.length, current_user.length])
 
   function CreateInterface() {
+    var active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
+    if (params.id == current_user.id) {
+      active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align active mt-2">Profile</Link>
+    }
     return(
       <div className="container-fluid mt-4">
         <div className="row">
@@ -42,7 +46,7 @@ const User = () => {
             <hr />
             <nav class="nav flex-column nav-pill nav-fill mt-4">
               <Link to="/" type="button" className="btn btn-outline-primary left-align">Dashboard</Link>
-              <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align active mt-2">Profile</Link>
+              {active}
             </nav>
           </div>
           <div className="col-10 team-listing">
@@ -54,8 +58,35 @@ const User = () => {
   }
 
   function CreateProfile() {
+    var userName = "";
+    if (user.length != 0) {
+      userName = user.attributes.first_name + " " + user.attributes.last_name
+    }
+
     return(
-      <h2>Profile</h2>
+      <div>
+        <div className="row justify-content-md-center">
+          <div className="top-profile">
+            <div className="text-left profile-cover">
+              <h4>Profile</h4>
+            </div>
+          </div>
+
+          <div className="card card-profile">
+            <div className="card-body">
+              <h3>{userName}</h3>
+              {login.map((log, index) => {
+                if (log.attributes.id == user.attributes.login_id) {
+                  return(
+                    <p>{log.attributes.email}</p>
+                  )
+                }
+              })}
+            </div>
+          </div>
+
+        </div>
+      </div>
     )
   }
 
