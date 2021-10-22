@@ -74,7 +74,22 @@ const User = () => {
 
           <div className="card card-profile">
             <div className="card-body">
-              <h3>{userName}</h3>
+              <div className="row">
+                <div className="col">
+                  <h3>{userName}</h3>
+                </div>
+                <div className="col">
+                  <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                      <p className="nav-link lead active">Profile</p>
+                    </li>
+                    <li class="nav-item">
+                      <p className="nav-link lead disabled">Endorsements</p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
               {login.map((log, index) => {
                 if (log.attributes.id == user.attributes.login_id) {
                   return(
