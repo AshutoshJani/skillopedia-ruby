@@ -57,6 +57,102 @@ const User = () => {
     )
   }
 
+  function FindProject(idToSearch) {
+    return projects.find(item => {
+      return item.attributes.id == idToSearch
+    })
+  };
+
+  function FindSkill(idToSearch) {
+    return skills.find(item => {
+      return item.attributes.id == idToSearch
+    })
+  };
+
+  function Profile() {
+    var first = "";
+    var last = "";
+    var email = "";
+    var exp = "";
+    var rol = "";
+    var proj = "";
+
+    if (user.length != 0) {
+      first = user.attributes.first_name
+      last = user.attributes.last_name
+
+      login.map((log, index) => {
+        if (log.attributes.id == user.attributes.login_id) {
+          email = log.attributes.email
+        }
+      })
+
+      exp = user.attributes.exp_year + "y " + user.attributes.exp_month + "m"
+
+      role.map((rl, index) => {
+        if (user.relationships.master_role.data.id == rl.attributes.id) {
+          rol = rl.attributes.role_name
+        }
+      })
+
+      user.relationships.master_projects.data.map((usr, index) => {
+        let obj = FindProject(usr.id);
+        if (obj != null) {
+          proj = obj.attributes.proj_name + " "
+        }
+      })
+    }
+
+
+    return(
+      <div className="row mt-4">
+        <div className="col-3">
+          <div className="card profile-info">
+            <div className="card-header">
+              <h4>Profile Information</h4>
+            </div>
+            <div className="card-body">
+              <div className="lead">
+                First Name: <br />
+                <b>{first}</b> <br />
+              </div>
+              <div className="lead mt-2">
+                Last Name: <br />
+                <b>{last}</b> <br />
+              </div>
+              <div className="lead mt-2">
+                Email: <br />
+                <b>{email}</b> <br />
+              </div>
+              <div className="lead mt-2">
+                Total Experience: <br />
+                <b>{exp}</b> <br />
+              </div>
+              <div className="lead mt-2">
+                Role: <br />
+                <b>{rol}</b> <br />
+              </div>
+              <div className="lead mt-2">
+                Current Project: <br />
+                <b>{proj}</b> <br />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-9">
+          <div className="card profile-tab">
+            <div className="card-header">
+              <h4>Skill Set</h4>
+            </div>
+            <div className="card-body">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   function CreateProfile() {
     var userName = "";
     if (user.length != 0) {
@@ -98,6 +194,10 @@ const User = () => {
                 }
               })}
             </div>
+          </div>
+
+          <div className="container">
+            <Profile />
           </div>
 
         </div>
