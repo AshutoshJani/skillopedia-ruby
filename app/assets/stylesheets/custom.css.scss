@@ -67,6 +67,11 @@ body {
   width: 98%;
 }
 
+.bottom {
+  position: absolute;
+  bottom: 100px;
+}
+
 .top-profile {
   background-image: url('/assets/login_background.jpg');
   border-radius: 20px;

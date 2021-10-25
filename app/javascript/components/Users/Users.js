@@ -61,6 +61,7 @@ const Users = () => {
             <nav class="nav flex-column nav-pill nav-fill mt-4">
               <Link to="/" type="button" className="btn btn-outline-primary left-align active">Dashboard</Link>
               <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
+              <Link to="/logins/sign_out" type="button" className="btn btn-outline-secondary left-align bottom" method="delete">Logout</Link>
             </nav>
           </div>
           <div className="col-10 team-listing">

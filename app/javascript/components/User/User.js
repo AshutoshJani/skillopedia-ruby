@@ -6,28 +6,31 @@ const User = () => {
 
   const params = useParams();
   const user_url = axios.get(`/api/v1/users/${params.id}`);
-  const skills_url = axios.get('/api/v1/master_skills');
+  const m_skills_url = axios.get('/api/v1/master_skills');
   const role_url = axios.get('/api/v1/master_role');
   const projects_url = axios.get('/api/v1/master_projects');
-  const current_user_url = axios.get('/api/v1/current_user')
+  const current_user_url = axios.get('/api/v1/current_user');
+  const skills_url = axios.get('api/v1/skills/');
 
   const [user, setUser] = useState([])
-  const [skills, setSkills] = useState([])
+  const [m_skills, setMSkills] = useState([])
   const [role, setRole] = useState([])
   const [projects, setProjects] = useState([])
   const [login, setLogin] = useState([])
   const [current_user, setCurrentUser] = useState([])
+  const [skills, setSkills] = useState([])
 
   useEffect(() => {
 
-    axios.all([user_url, skills_url, role_url, projects_url, current_user_url])
+    axios.all([user_url, m_skills_url, role_url, projects_url, current_user_url, skills_url])
     .then(axios.spread((...response) => {
       setUser(response[0].data.data)
       setLogin(response[0].data.included)
-      setSkills(response[1].data.data)
+      setMSkills(response[1].data.data)
       setRole(response[2].data.data)
       setProjects(response[3].data.data)
       setCurrentUser(response[4].data)
+      setSkills(response[5].data)
     }))
     .catch(response => console.log(response))
 
@@ -64,7 +67,7 @@ const User = () => {
   };
 
   function FindSkill(idToSearch) {
-    return skills.find(item => {
+    return m_skills.find(item => {
       return item.attributes.id == idToSearch
     })
   };
@@ -74,8 +77,14 @@ const User = () => {
     var last = "";
     var email = "";
     var exp = "";
+    var git = "";
     var rol = "";
     var proj = "";
+    var skill_name = [];
+    var self_rating = "";
+    var exp_skill = "";
+    var count = 0;
+
 
     if (user.length != 0) {
       first = user.attributes.first_name
@@ -89,6 +98,8 @@ const User = () => {
 
       exp = user.attributes.exp_year + "y " + user.attributes.exp_month + "m"
 
+      git = user.attributes.github
+
       role.map((rl, index) => {
         if (user.relationships.master_role.data.id == rl.attributes.id) {
           rol = rl.attributes.role_name
@@ -98,7 +109,14 @@ const User = () => {
       user.relationships.master_projects.data.map((usr, index) => {
         let obj = FindProject(usr.id);
         if (obj != null) {
-          proj = obj.attributes.proj_name + " "
+          proj += obj.attributes.proj_name + " "
+        }
+      })
+
+      user.relationships.master_skills.data.map((usr, index) => {
+        let obj = FindSkill(usr.id);
+        if (obj != null) {
+          skill_name[++count] = obj.attributes.skill_name
         }
       })
     }
@@ -129,6 +147,10 @@ const User = () => {
                 <b>{exp}</b> <br />
               </div>
               <div className="lead mt-2">
+                Github: <br />
+                <b>{git}</b> <br />
+              </div>
+              <div className="lead mt-2">
                 Role: <br />
                 <b>{rol}</b> <br />
               </div>
@@ -145,6 +167,25 @@ const User = () => {
               <h4>Skill Set</h4>
             </div>
             <div className="card-body">
+
+            <table class="table table-borderless">
+              <thead>
+                <tr>
+                  <th scope="col">Skill Name</th>
+                  <th scope="col">Self Rating</th>
+                  <th scope="col">Experience</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    {skill_name}
+                  </td>
+                  <td>Otto</td>
+                  <td>@mdo</td>
+                </tr>
+              </tbody>
+            </table>
 
             </div>
           </div>
