@@ -10,7 +10,7 @@ const User = () => {
   const role_url = axios.get('/api/v1/master_role');
   const projects_url = axios.get('/api/v1/master_projects');
   const current_user_url = axios.get('/api/v1/current_user');
-  const skills_url = axios.get('api/v1/skills/');
+  const skills_url = axios.get('/api/v1/skills');
 
   const [user, setUser] = useState([])
   const [m_skills, setMSkills] = useState([])
@@ -30,11 +30,11 @@ const User = () => {
       setRole(response[2].data.data)
       setProjects(response[3].data.data)
       setCurrentUser(response[4].data)
-      setSkills(response[5].data)
+      setSkills(response[5].data.data)
     }))
     .catch(response => console.log(response))
 
-  }, [user.length, login.lenght, skills.length, role.length, projects.length, current_user.length])
+  }, [user.length, login.lenght, skills.length, role.length, projects.length, current_user.length, skills.length])
 
   function CreateInterface() {
     var active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
@@ -66,9 +66,15 @@ const User = () => {
     })
   };
 
-  function FindSkill(idToSearch) {
+  function FindMSkill(idToSearch) {
     return m_skills.find(item => {
       return item.attributes.id == idToSearch
+    })
+  };
+
+  function FindSkill(idToSearch) {
+    return skills.find(item => {
+      return item.id == idToSearch
     })
   };
 
@@ -81,9 +87,10 @@ const User = () => {
     var rol = "";
     var proj = "";
     var skill_name = [];
-    var self_rating = "";
-    var exp_skill = "";
-    var count = 0;
+    var self_rating = [];
+    var exp_skill = [];
+    var count = -1;
+    var skills_list = "";
 
 
     if (user.length != 0) {
@@ -114,13 +121,38 @@ const User = () => {
       })
 
       user.relationships.master_skills.data.map((usr, index) => {
-        let obj = FindSkill(usr.id);
+        let obj = FindMSkill(usr.id);
         if (obj != null) {
           skill_name[++count] = obj.attributes.skill_name
         }
       })
-    }
+      count = -1;
+      if (skills.length != 0) {
+        user.relationships.skills.data.map((usr, index) => {
+          let obj = FindSkill(usr.id);
+          if (obj != null) {
+            self_rating[++count] = obj.attributes.self_rating
+            exp_skill[count] = obj.attributes.exp_year + "y " + obj.attributes.exp_month + "m" 
+          }
+        })
+  
+        var skill_obj = skill_name.map((skl, i) => 
+        ({
+          "skill_name": skl,
+          "self_rating": self_rating[i],
+          "experience": exp_skill[i]
+        })
+        )
 
+        skills_list = skill_obj.map((it, index) => {
+          <tr>
+            <td>{it.skill_name}</td>
+            <td>{it.self_rating}</td>
+            <td>{it.experience}</td>
+          </tr>
+        })
+      }
+    }
 
     return(
       <div className="row mt-4">
@@ -176,14 +208,8 @@ const User = () => {
                   <th scope="col">Experience</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    {skill_name}
-                  </td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
+              <tbody> 
+                {skills_list}
               </tbody>
             </table>
 
