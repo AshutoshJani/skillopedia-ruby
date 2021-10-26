@@ -131,7 +131,7 @@ const User = () => {
         user.relationships.skills.data.map((usr, index) => {
           let obj = FindSkill(usr.id);
           if (obj != null) {
-            self_rating[++count] = obj.attributes.self_rating
+            self_rating[++count] = obj.attributes.self_rating + "/5"
             exp_skill[count] = obj.attributes.exp_year + "y " + obj.attributes.exp_month + "m" 
           }
         })
@@ -145,11 +145,13 @@ const User = () => {
         )
 
         skills_list = skill_obj.map((it, index) => {
-          <tr>
-            <td>{it.skill_name}</td>
-            <td>{it.self_rating}</td>
-            <td>{it.experience}</td>
-          </tr>
+          return(
+            <tr>
+              <td>{it.skill_name}</td>
+              <td>{it.self_rating}</td>
+              <td>{it.experience}</td>
+            </tr>
+          )
         })
       }
     }
