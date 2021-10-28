@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  devise_for :logins
+  devise_for :logins do
+    delete '/logins/sign_out' => 'devise/sessions#destroy'
+  end
 
   namespace :api do
     namespace :v1 do
