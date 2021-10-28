@@ -36,11 +36,29 @@ const User = () => {
 
   }, [user.length, login.lenght, skills.length, role.length, projects.length, current_user.length, skills.length])
 
+  function logout() {
+    fetch("/logins/sign_out"
+    , {
+      method: 'delete',
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+        },
+    })
+    .then((response) => {
+      console.log(response)
+    })
+  //   .then((result) => {
+  //    window.location.href = '/';
+  //  });
+  }
+  
   function CreateInterface() {
     var active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
     if (params.id == current_user.id) {
       active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align active mt-2">Profile</Link>
     }
+
     return(
       <div className="container-fluid mt-4">
         <div className="row">
@@ -50,6 +68,7 @@ const User = () => {
             <nav class="nav flex-column nav-pill nav-fill mt-4">
               <Link to="/" type="button" className="btn btn-outline-primary left-align">Dashboard</Link>
               {active}
+              <button type="button" className="btn btn-outline-secondary left-align bottom" onClick={logout}>Logout</button>
             </nav>
           </div>
           <div className="col-10 team-listing">
