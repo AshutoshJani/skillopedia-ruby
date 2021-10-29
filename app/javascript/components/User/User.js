@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const User = () => {
@@ -21,6 +21,14 @@ const User = () => {
   const [skills, setSkills] = useState([])
 
   const [dispEP, setDispEP] = useState(false)
+
+  const profileForm = useRef(null)
+
+  const handleSave = (e) => {
+    e.preventDefault()
+    const form = profileForm.current
+    console.log(form['first_name'].value)
+  }
 
   useEffect(() => {
 
@@ -136,54 +144,68 @@ const User = () => {
           </div>
         </div>
         <div className="card-body">
-          <div className="">
-            First Name: <br />
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder={first} aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+          <form ref={profileForm}>
+            <div className="">
+              First Name: <br />
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" defaultValue={first} label={'first name'} name={'first_name'} />
+              </div>
             </div>
-          </div>
-          <div className="mt-2">
-            Last Name: <br />
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder={last} aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+            <div className="mt-2">
+              Last Name: <br />
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" defaultValue={last} label={'last name'} name={'last_name'} />
+              </div>
             </div>
-          </div>
-          <div className="mt-2">
-            Email: <br />
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder={email} aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+            <div className="mt-2">
+              Email: <br />
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" defaultValue={email} label={'email'} name={'email'} />
+              </div>
             </div>
-          </div>
-          <div className="mt-2">
-            Total Experience: <br />
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder={exp} aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+            <div className="mt-2">
+              Total Experience: <br />
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" defaultValue={exp} label={'total experience'} name={'total_exp'} />
+              </div>
             </div>
-          </div>
-          <div className="mt-2">
-            Github: <br />
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder={git} aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+            <div className="mt-2">
+              Github: <br />
+              <div class="input-group mb-3">
+                <input type="text" class="form-control" defaultValue={git} label={'github'} name={'github'} />
+              </div>
             </div>
-          </div>
-          <div className="mt-2">
-            Role: <br />
-            <select class="form-select" aria-label="Default select example">
-              <option selected>{rol}</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select>
-          </div>
-          <div className="mt-2">
-            Current Project: <br />
-            <select class="form-select" multiple aria-label="multiple select example">
-              <option selected>{proj}</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </select>
-          </div>
+            <div className="mt-2">
+              Role: <br />
+              <select class="form-select" label={'role'} name={'role'} >
+                <option selected>{rol}</option>
+                {role.map((rl, index) => {
+                  return(
+                    <option value={rl.attributes.role_name}>{rl.attributes.role_name}</option>
+                  )
+                })}
+              </select>
+            </div>
+            <div className="mt-2">
+              Current Project: <br />
+              <select class="form-select" multiple label={'current project'} name={'proj_name'} >
+                <option selected>{proj}</option>
+                {projects.map((pr, index) => {
+                  return(
+                    <option value={pr.attributes.proj_name}>{pr.attributes.proj_name}</option>
+                  )
+                })}
+              </select>
+            </div>
+            <div className="row">
+              <div className="col">
+                <button class="btn btn-outline-success mt-2" onClick={handleSave}>Save</button>
+              </div>
+              <div className="col">
+                <button class="btn btn-outline-danger mt-2" onClick={handleChangeProfile}>Cancel</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     )
