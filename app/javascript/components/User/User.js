@@ -20,6 +20,8 @@ const User = () => {
   const [current_user, setCurrentUser] = useState([])
   const [skills, setSkills] = useState([])
 
+  const [dispEP, setDispEP] = useState(false)
+
   useEffect(() => {
 
     axios.all([user_url, m_skills_url, role_url, projects_url, current_user_url, skills_url])
@@ -52,7 +54,7 @@ const User = () => {
   //    window.location.href = '/';
   //  });
   }
-  
+
   function CreateInterface() {
     var active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
     if (params.id == current_user.id) {
@@ -73,6 +75,114 @@ const User = () => {
           </div>
           <div className="col-10 team-listing">
             <CreateProfile />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  function handleChangeProfile() {
+    setDispEP(!dispEP)
+    console.log(dispEP)
+  }
+
+  function EditProfile() {
+    var first = "";
+    var last = "";
+    var email = "";
+    var exp = "";
+    var git = "";
+    var rol = "";
+    var proj = "";
+    
+    if (user.length != 0) {
+      first = user.attributes.first_name
+      last = user.attributes.last_name
+
+      login.map((log, index) => {
+        if (log.attributes.id == user.attributes.login_id) {
+          email = log.attributes.email
+        }
+      })
+
+      exp = user.attributes.exp_year + "y " + user.attributes.exp_month + "m"
+
+      git = user.attributes.github
+
+      role.map((rl, index) => {
+        if (user.relationships.master_role.data.id == rl.attributes.id) {
+          rol = rl.attributes.role_name
+        }
+      })
+
+      user.relationships.master_projects.data.map((usr, index) => {
+        let obj = FindProject(usr.id);
+        if (obj != null) {
+          proj += obj.attributes.proj_name + " "
+        }
+      })
+    }
+
+    return(
+      <div className="card profile-info">
+        <div className="card-header">
+          <div className="row">
+            <div className="col-9">
+              <h4>Profile Information</h4>
+            </div>
+            <div className="col-3">
+              <button type="button" className="btn btn-outline-info" onClick={handleChangeProfile}>Edit</button>
+            </div>
+          </div>
+        </div>
+        <div className="card-body">
+          <div className="">
+            First Name: <br />
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder={first} aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+            </div>
+          </div>
+          <div className="mt-2">
+            Last Name: <br />
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder={last} aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+            </div>
+          </div>
+          <div className="mt-2">
+            Email: <br />
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder={email} aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+            </div>
+          </div>
+          <div className="mt-2">
+            Total Experience: <br />
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder={exp} aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+            </div>
+          </div>
+          <div className="mt-2">
+            Github: <br />
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder={git} aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+            </div>
+          </div>
+          <div className="mt-2">
+            Role: <br />
+            <select class="form-select" aria-label="Default select example">
+              <option selected>{rol}</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
+          </div>
+          <div className="mt-2">
+            Current Project: <br />
+            <select class="form-select" multiple aria-label="multiple select example">
+              <option selected>{proj}</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
           </div>
         </div>
       </div>
@@ -105,13 +215,7 @@ const User = () => {
     var git = "";
     var rol = "";
     var proj = "";
-    var skill_name = [];
-    var self_rating = [];
-    var exp_skill = [];
-    var count = -1;
-    var skills_list = "";
-
-
+    
     if (user.length != 0) {
       first = user.attributes.first_name
       last = user.attributes.last_name
@@ -138,7 +242,62 @@ const User = () => {
           proj += obj.attributes.proj_name + " "
         }
       })
+    }
 
+    return(
+      <div className="card profile-info">
+        <div className="card-header">
+          <div className="row">
+            <div className="col-9">
+              <h4>Profile Information</h4>
+            </div>
+            <div className="col-3">
+              <button type="button" className="btn btn-outline-info" onClick={handleChangeProfile}>Edit</button>
+            </div>
+          </div>
+        </div>
+        <div className="card-body">
+          <div className="lead">
+            First Name: <br />
+            <b>{first}</b> <br />
+          </div>
+          <div className="lead mt-2">
+            Last Name: <br />
+            <b>{last}</b> <br />
+          </div>
+          <div className="lead mt-2">
+            Email: <br />
+            <b>{email}</b> <br />
+          </div>
+          <div className="lead mt-2">
+            Total Experience: <br />
+            <b>{exp}</b> <br />
+          </div>
+          <div className="lead mt-2">
+            Github: <br />
+            <b>{git}</b> <br />
+          </div>
+          <div className="lead mt-2">
+            Role: <br />
+            <b>{rol}</b> <br />
+          </div>
+          <div className="lead mt-2">
+            Current Project: <br />
+            <b>{proj}</b> <br />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  function SkillsInfo() {
+    var skill_name = [];
+    var self_rating = [];
+    var exp_skill = [];
+    var count = -1;
+    var skills_list = "";
+
+    if (user.length != 0) {
       user.relationships.master_skills.data.map((usr, index) => {
         let obj = FindMSkill(usr.id);
         if (obj != null) {
@@ -176,66 +335,32 @@ const User = () => {
     }
 
     return(
-      <div className="row mt-4">
-        <div className="col-3">
-          <div className="card profile-info">
-            <div className="card-header">
-              <h4>Profile Information</h4>
+      <div className="card profile-tab">
+        <div className="card-header">
+          <div className="row">
+            <div className="col-10">
+              <h4>Skill Set</h4>
             </div>
-            <div className="card-body">
-              <div className="lead">
-                First Name: <br />
-                <b>{first}</b> <br />
-              </div>
-              <div className="lead mt-2">
-                Last Name: <br />
-                <b>{last}</b> <br />
-              </div>
-              <div className="lead mt-2">
-                Email: <br />
-                <b>{email}</b> <br />
-              </div>
-              <div className="lead mt-2">
-                Total Experience: <br />
-                <b>{exp}</b> <br />
-              </div>
-              <div className="lead mt-2">
-                Github: <br />
-                <b>{git}</b> <br />
-              </div>
-              <div className="lead mt-2">
-                Role: <br />
-                <b>{rol}</b> <br />
-              </div>
-              <div className="lead mt-2">
-                Current Project: <br />
-                <b>{proj}</b> <br />
-              </div>
+            <div className="col-2">
+              <button type="button" className="btn btn-outline-info">Add Skill</button>
             </div>
           </div>
         </div>
-        <div className="col-9">
-          <div className="card profile-tab">
-            <div className="card-header">
-              <h4>Skill Set</h4>
-            </div>
-            <div className="card-body">
+        <div className="card-body">
 
-            <table class="table table-borderless">
-              <thead>
-                <tr>
-                  <th scope="col">Skill Name</th>
-                  <th scope="col">Self Rating</th>
-                  <th scope="col">Experience</th>
-                </tr>
-              </thead>
-              <tbody> 
-                {skills_list}
-              </tbody>
-            </table>
+        <table class="table table-borderless">
+          <thead>
+            <tr>
+              <th scope="col">Skill Name</th>
+              <th scope="col">Self Rating</th>
+              <th scope="col">Experience</th>
+            </tr>
+          </thead>
+          <tbody> 
+            {skills_list}
+          </tbody>
+        </table>
 
-            </div>
-          </div>
         </div>
       </div>
     )
@@ -265,10 +390,10 @@ const User = () => {
                 <div className="col">
                   <ul class="nav justify-content-end">
                     <li class="nav-item">
-                      <p className="nav-link lead active">Profile</p>
+                      <button className="btn btn -link nav-link lead active">Profile</button>
                     </li>
                     <li class="nav-item">
-                      <p className="nav-link lead disabled">Endorsements</p>
+                      <button className="btn btn-link nav-link lead">Endorsements</button>
                     </li>
                   </ul>
                 </div>
@@ -285,7 +410,19 @@ const User = () => {
           </div>
 
           <div className="container">
-            <Profile />
+            <div className="row mt-4">
+              <div className="col-3">
+                {
+                  (!dispEP) ?
+                    <Profile />
+                  :
+                    <EditProfile />
+                }
+              </div>
+              <div className="col-9">
+                <SkillsInfo />
+              </div>
+            </div>            
           </div>
 
         </div>
