@@ -12,10 +12,19 @@ class Api::V1::UsersController < ApplicationController
     render json: UserSerializer.new(user, options).serialized_json
   end
 
+  def update
+    user = User.find(params[:id])
+    console.log(permit_params)
+  end
+
   private 
 
   def options
     @options ||= { include: [:login] }
+  end
+
+  def permit_params
+    params.permit(:first_name, :last_name, :email, :exp_year, :exp_month, :github, :role, :curr_project)
   end
 
 end

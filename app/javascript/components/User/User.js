@@ -39,7 +39,18 @@ const User = () => {
       role: form['role'].value,
       curr_proj: form['proj_name'].value
     };
-    console.log(jsonObject)
+    updatePostRequest(jsonObject)
+  }
+
+  function updatePostRequest(jsonObject) {
+    fetch(`/api/v1/users/${params.id}`, {
+      method: 'put',
+      body: JSON.stringify(jsonObject),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((response) => {
+      alert('Post updated successfully');
+      location.href = '/';
+    });
   }
 
   useEffect(() => {
