@@ -14,7 +14,9 @@ class Api::V1::UsersController < ApplicationController
 
   def update
     user = User.find(params[:id])
-    console.log(permit_params)
+    if user.update(permit_params)
+      render json: user
+    end
   end
 
   private 
@@ -24,7 +26,8 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def permit_params
-    params.permit(:first_name, :last_name, :email, :exp_year, :exp_month, :github, :role, :curr_project)
+    # params.permit(:first_name, :last_name, :email, :exp_year, :exp_month, :github, :role, :curr_proj, :id, :fn, :ln)
+    params.require(:user).permit(:first_name, :last_name, :exp_year, :exp_month, :github)
   end
 
 end
