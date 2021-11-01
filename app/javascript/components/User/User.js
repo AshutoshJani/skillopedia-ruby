@@ -27,7 +27,19 @@ const User = () => {
   const handleSave = (e) => {
     e.preventDefault()
     const form = profileForm.current
-    console.log(form['first_name'].value)
+    var year = form['total_exp'].value.split(" ")[0].replace('y', '')
+    var month = form['total_exp'].value.split(" ")[1].replace('m', '')
+    var jsonObject = {
+      first_name: form['first_name'].value,
+      last_name: form['last_name'].value,
+      email: form['email'].value,
+      exp_year: parseInt(year),
+      exp_month: parseInt(month),
+      github: form['github'].value,
+      role: form['role'].value,
+      curr_proj: form['proj_name'].value
+    };
+    console.log(jsonObject)
   }
 
   useEffect(() => {
@@ -91,7 +103,6 @@ const User = () => {
 
   function handleChangeProfile() {
     setDispEP(!dispEP)
-    console.log(dispEP)
   }
 
   function EditProfile() {
