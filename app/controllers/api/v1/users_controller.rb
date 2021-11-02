@@ -12,11 +12,19 @@ class Api::V1::UsersController < ApplicationController
     render json: UserSerializer.new(user, options).serialized_json
   end
 
+  def create
+    user = User.new
+    user.login_id = current_login
+    user.save
+
+    render json: UserSerializer.new(user,options).serialized_json
+  end
+
   def update
     user = User.find(params[:id])
     login = user.login
     m_role = MasterRole.find_by(permit_role_params)
-    if (user.update(permit_user_params) || login.update(permit_login_params) || user.role.update(master_role_id: m_role[:id]))
+    if (user.update(permit_user_params)) || (login.update(permit_login_params)) || (user.role.update(master_role_id: m_role.id))
       render json: user
     end
   end
@@ -28,7 +36,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def permit_user_params
-    # params.permit(:first_name, :last_name, :email, :exp_year, :exp_month, :github, :role, :curr_proj, :id)
     params.require(:user).permit(:first_name, :last_name, :exp_year, :exp_month, :github)
   end
 

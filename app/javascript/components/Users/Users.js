@@ -128,10 +128,12 @@ const Users = () => {
                   </td>
 
                 {role.map((rl, index) => {
-                  if (user.relationships.master_role.data.id == rl.attributes.id) {
-                    return(
-                      <td>{rl.attributes.role_name}</td>
-                    )
+                  if (user.relationships.master_role.data) {
+                    if (user.relationships.master_role.data.id == rl.attributes.id) {
+                      return(
+                        <td>{rl.attributes.role_name}</td>
+                      )
+                    }
                   }
                 })}
 

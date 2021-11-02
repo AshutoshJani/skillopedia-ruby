@@ -141,8 +141,10 @@ const User = () => {
       git = user.attributes.github
 
       role.map((rl, index) => {
-        if (user.relationships.master_role.data.id == rl.attributes.id) {
-          rol = rl.attributes.role_name
+        if (user.relationships.master_role.data) {
+          if (user.relationships.master_role.data.id == rl.attributes.id) {
+            rol = rl.attributes.role_name
+          }
         }
       })
 
@@ -276,8 +278,10 @@ const User = () => {
       git = user.attributes.github
 
       role.map((rl, index) => {
-        if (user.relationships.master_role.data.id == rl.attributes.id) {
-          rol = rl.attributes.role_name
+        if (user.relationships.master_role.data) {
+          if (user.relationships.master_role.data.id == rl.attributes.id) {
+            rol = rl.attributes.role_name
+          }
         }
       })
 
