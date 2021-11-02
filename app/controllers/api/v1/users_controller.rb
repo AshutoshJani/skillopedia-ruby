@@ -14,7 +14,9 @@ class Api::V1::UsersController < ApplicationController
 
   def update
     user = User.find(params[:id])
-    if user.update(permit_params)
+    login = user.login
+    m_role = MasterRole.find_by(permit_role_params)
+    if (user.update(permit_user_params) || login.update(permit_login_params) || user.role.update(master_role_id: m_role[:id]))
       render json: user
     end
   end
@@ -25,9 +27,21 @@ class Api::V1::UsersController < ApplicationController
     @options ||= { include: [:login] }
   end
 
-  def permit_params
-    # params.permit(:first_name, :last_name, :email, :exp_year, :exp_month, :github, :role, :curr_proj, :id, :fn, :ln)
+  def permit_user_params
+    # params.permit(:first_name, :last_name, :email, :exp_year, :exp_month, :github, :role, :curr_proj, :id)
     params.require(:user).permit(:first_name, :last_name, :exp_year, :exp_month, :github)
+  end
+
+  def permit_login_params
+    params.permit(:email)
+  end
+
+  def permit_role_params
+    params.permit(:role)
+  end
+
+  def permit_proj_params
+    params.permit(:curr_proj)
   end
 
 end

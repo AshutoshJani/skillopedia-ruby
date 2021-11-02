@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 
 const User = () => {
+
+  const history = useHistory();
 
   const params = useParams();
   const user_url = axios.get(`/api/v1/users/${params.id}`);
@@ -36,31 +38,20 @@ const User = () => {
       exp_year: parseInt(year),
       exp_month: parseInt(month),
       github: form['github'].value,
-      role: form['role'].value,
+      role_name: form['role'].value,
       curr_proj: form['proj_name'].value
     };
-    // console.log(jsonObject)
     updatePostRequest(jsonObject)
   }
 
   function updatePostRequest(jsonObject) {
-    const obj = {
-      fn: 'first',
-      ln: 'last'
-    };
     axios.put(`/api/v1/users/${params.id}`, jsonObject)
-    .then(response => console.log(response))
-    // fetch(`/api/v1/users/${params.id}`, {
-    //   method: 'put',
-    //   body: JSON.stringify({
-    //     fn: 'first',
-    //     ln: 'last'
-    //   }),
-    //   headers: { 'Content-Type': 'application/json' },
-    // }).then((response) => {
-    //   alert('Post updated successfully');
-    //   location.href = '/';
-    // });
+    .then(
+      response => console.log(response),
+      location.reload(),
+      alert("User successfully updated")
+    )
+    .catch(response => console.log(response))
   }
 
   useEffect(() => {
