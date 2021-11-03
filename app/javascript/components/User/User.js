@@ -136,7 +136,7 @@ const User = () => {
         }
       })
 
-      exp = user.attributes.exp_year + "y " + user.attributes.exp_month + "m"
+      exp = `${user.attributes.exp_year}y ${user.attributes.exp_month}m`
 
       git = user.attributes.github
 

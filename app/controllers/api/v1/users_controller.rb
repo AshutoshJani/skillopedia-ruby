@@ -24,9 +24,19 @@ class Api::V1::UsersController < ApplicationController
     user = User.find(params[:id])
     login = user.login
     m_role = MasterRole.find_by(permit_role_params)
-    if (user.update(permit_user_params)) || (login.update(permit_login_params)) || (user.role.update(master_role_id: m_role.id))
+    permitted_email = permit_login_params
+
+    if (user.master_role == nil) 
+      user.master_role = m_role
+    end
+
+    user.update(permit_user_params)
+
+    if (login.update(permitted_email)) || (user.master_role != m_role)
+      user.master_role = m_role
       render json: user
     end
+
   end
 
   private 
@@ -44,7 +54,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def permit_role_params
-    params.permit(:role)
+    params.permit(:role_name)
   end
 
   def permit_proj_params

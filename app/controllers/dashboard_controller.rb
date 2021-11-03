@@ -12,7 +12,7 @@ class DashboardController < ApplicationController
       user = User.new
       user.login_id = current_login.id
       user.save
-      redirect_to user
+      redirect_to api_v1_user_path(user)
     end
   end
 
