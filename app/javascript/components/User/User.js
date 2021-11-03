@@ -23,8 +23,10 @@ const User = () => {
   const [skills, setSkills] = useState([])
 
   const [dispEP, setDispEP] = useState(false)
+  const [dispAS, setDispAS] = useState(false)
 
   const profileForm = useRef(null)
+  const skillForm = useRef(null)
 
   const handleSave = (e) => {
     e.preventDefault()
@@ -115,6 +117,10 @@ const User = () => {
 
   function handleChangeProfile() {
     setDispEP(!dispEP)
+  }
+
+  function handleAddSkill() {
+    setDispAS(!dispAS)
   }
 
   function EditProfile() {
@@ -236,6 +242,35 @@ const User = () => {
     )
   }
 
+  function AddSkill() {
+    return(
+      <form ref={skillForm}>
+        <table className="table table-borderless">
+          <tbody>
+            <tr>
+              <td className="col">
+                <select class="form-select" label={'skill name'} name={'skill_name'} >
+                  {m_skills.map((sk, index) => {
+                    return(
+                      <option value={sk.attributes.skill_name}>{sk.attributes.skill_name}</option>
+                    )
+                  })}
+                </select>
+              </td>
+              <td className="col">
+                <input type="text" class="form-control" label={'self rating'} name={'self_rating'} />
+              </td>
+              <td className="col">
+                <input type="text" class="form-control" label={'experience'} name={'exp'} />
+              </td>
+              <td className="col"><button className="btn btn-outline-success">Add</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    )
+  }
+  
   function FindProject(idToSearch) {
     return projects.find(item => {
       return item.attributes.id == idToSearch
@@ -345,6 +380,7 @@ const User = () => {
     var exp_skill = [];
     var count = -1;
     var skills_list = "";
+    var add_skill = "";
 
     if (user.length != 0) {
       user.relationships.master_skills.data.map((usr, index) => {
@@ -381,6 +417,7 @@ const User = () => {
           )
         })
       }
+
     }
 
     return(
@@ -391,24 +428,31 @@ const User = () => {
               <h4>Skill Set</h4>
             </div>
             <div className="col-2">
-              <button type="button" className="btn btn-outline-info">Add Skill</button>
+              <button type="button" className="btn btn-outline-info" onClick={handleAddSkill}>Add Skill</button>
             </div>
           </div>
         </div>
         <div className="card-body">
 
-        <table class="table table-borderless">
-          <thead>
-            <tr>
-              <th scope="col">Skill Name</th>
-              <th scope="col">Self Rating</th>
-              <th scope="col">Experience</th>
-            </tr>
-          </thead>
-          <tbody> 
-            {skills_list}
-          </tbody>
-        </table>
+          <table class="table table-borderless">
+            <thead>
+              <tr>
+                <th scope="col">Skill Name</th>
+                <th scope="col">Self Rating</th>
+                <th scope="col">Experience</th>
+              </tr>
+            </thead>
+            <tbody> 
+              {skills_list}
+            </tbody>
+          </table>
+
+          {
+            (dispAS) ?
+              <AddSkill />
+            :
+              <br />
+          }
 
         </div>
       </div>
