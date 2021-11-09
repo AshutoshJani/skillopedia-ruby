@@ -24,10 +24,20 @@ class Api::V1::UsersController < ApplicationController
     user = User.find(params[:id])
     login = user.login
     m_role = MasterRole.find_by(permit_role_params)
+    m_skill = MasterSkill.find_by(permit_m_skill_params)
     permitted_email = permit_login_params
 
     if (user.master_role == nil) 
       user.master_role = m_role
+    end
+
+    if (!user.master_skills.exists?(m_skill.id))
+      user.skills.create(
+        master_skill_id: m_skill.id,
+        user_id: user.id
+      )
+      skl = user.skills.find_by(master_skill_id: m_skill.id)
+      skl.update(permit_skill_params)
     end
 
     user.update(permit_user_params)
@@ -59,6 +69,14 @@ class Api::V1::UsersController < ApplicationController
 
   def permit_proj_params
     params.permit(:curr_proj)
+  end
+
+  def permit_skill_params
+    params.permit(:self_rating, :exp_year, :exp_month)
+  end
+
+  def permit_m_skill_params
+    params.permit(:skill_name)
   end
 
 end

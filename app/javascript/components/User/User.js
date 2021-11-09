@@ -46,6 +46,18 @@ const User = () => {
     updatePostRequest(jsonObject)
   }
 
+  const handleAdd = (e) => {
+    e.preventDefault()
+    const form = skillForm.current
+    var jsonObject = {
+      skill_name: form['skill_name'].value,
+      self_rating: form['self_rating'].value,
+      exp_year: form['exp_year'].value,
+      exp_month: form['exp_month'].value
+    };
+    updatePostRequest(jsonObject)
+  }
+
   function updatePostRequest(jsonObject) {
     axios.put(`/api/v1/users/${params.id}`, jsonObject)
     .then(
@@ -247,7 +259,7 @@ const User = () => {
       <form ref={skillForm}>
         <table className="table table-borderless">
           <tbody>
-            <tr>
+            <tr className="row">
               <td className="col">
                 <select class="form-select" label={'skill name'} name={'skill_name'} >
                   {m_skills.map((sk, index) => {
@@ -257,13 +269,19 @@ const User = () => {
                   })}
                 </select>
               </td>
-              <td className="col">
-                <input type="text" class="form-control" label={'self rating'} name={'self_rating'} />
+              <td className="col input-group">
+                <input type="text" class="form-control" label={'self rating'} name={'self_rating'} placeholder="Self Rating" />
+                <span class="input-group-text" id="basic-addon2">out of 5</span>
+              </td>
+              <td className="col input-group">
+                <input type="text" class="form-control" label={'exp year'} name={'exp_year'} placeholder="Exp" />
+                <span class="input-group-text" id="basic-addon2">years</span>
+                <input type="text" class="form-control" label={'exp month'} name={'exp_month'} placeholder="Exp" />
+                <span class="input-group-text" id="basic-addon2">months</span>
               </td>
               <td className="col">
-                <input type="text" class="form-control" label={'experience'} name={'exp'} />
+                <button className="btn btn-outline-success" onClick={handleAdd}>Add</button>
               </td>
-              <td className="col"><button className="btn btn-outline-success">Add</button></td>
             </tr>
           </tbody>
         </table>
