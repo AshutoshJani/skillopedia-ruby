@@ -9,11 +9,9 @@ class DashboardController < ApplicationController
 
   def check_accepted
     if current_login.user.signup_request == nil
-      redirect_to "/waiting"
+      render component: 'SignupRequest/Waitlist'
     elsif current_login.user.signup_request == false
-      redirect_to "/rejected"
-    else
-      redirect_to "/users/, #{current_login.user.id}"
+      render component: 'SignupRequest/Rejected'
     end
   end
 

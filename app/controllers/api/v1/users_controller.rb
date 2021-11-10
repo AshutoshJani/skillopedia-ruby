@@ -38,6 +38,9 @@ class Api::V1::UsersController < ApplicationController
       )
       skl = user.skills.find_by(master_skill_id: m_skill.id)
       skl.update(permit_skill_params)
+    elsif (user.master_skills.exists?(m_skill.id))
+      skl = user.skills.find_by(master_skill_id: m_skill.id)
+      skl.update(permit_skill_params)
     end
 
     user.update(permit_user_params)
