@@ -9,9 +9,10 @@ const Users = () => {
 
   const users_url = axios.get('/api/v1/users');
   const skills_url = axios.get('/api/v1/master_skills');
-  const role_url = axios.get('api/v1/master_role');
-  const projects_url = axios.get('api/v1/master_projects');
-  const current_user_url = axios.get('api/v1/current_user')
+  const role_url = axios.get('/api/v1/master_role');
+  const projects_url = axios.get('/api/v1/master_projects');
+  const current_user_url = axios.get('/api/v1/current_user');
+  const assoc_role_url = axios.get('/api/v1/role');
 
   const [users, setUsers] = useState([])
   const [skills, setSkills] = useState([])
@@ -19,10 +20,11 @@ const Users = () => {
   const [projects, setProjects] = useState([])
   const [login, setLogin] = useState([])
   const [current_user, setCurrentUser] = useState([])
+  const [assoc_role, setAssocRole] = useState([])
 
   useEffect(() => {
 
-    axios.all([users_url, skills_url, role_url, projects_url, current_user_url])
+    axios.all([users_url, skills_url, role_url, projects_url, current_user_url, assoc_role_url])
     .then(axios.spread((...response) => {
       setUsers(response[0].data.data)
       setLogin(response[0].data.included)
@@ -30,10 +32,11 @@ const Users = () => {
       setRole(response[2].data.data)
       setProjects(response[3].data.data)
       setCurrentUser(response[4].data)
+      setAssocRole(response[5].data)
     }))
     .catch(response => console.log(response))
 
-  }, [users.length, login.lenght, skills.length, role.length, projects.length, current_user.length])
+  }, [users.length, login.length, skills.length, role.length, projects.length, current_user.length, assoc_role.length])
 
   function FindProject(idToSearch) {
     return projects.find(item => {
@@ -70,9 +73,19 @@ const Users = () => {
 
   function CreateInterface() {
     var admin = "";
-    // role.map((rl) => {
-    //   if (rl.)
-    // })
+    
+    // console.log("1")
+    // if (assoc_role.length != 0) {
+    //   console.log("2")
+    //   assoc_role.map((rl, index) => {
+    //     if (rl.id == current_user.relationships.role.data.id) {
+    //       if (rl.attributes.admin == true) {
+    //         admin = <Link to="/admin" type="button" className="btn btn-outline-primary left-align mt-2">Admin Page</Link>
+    //         console.log("inside function")
+    //       }
+    //     }
+    //   })
+    // }
 
     return(
       <div className="container-fluid mt-4">
@@ -112,7 +125,7 @@ const Users = () => {
         </thead>
         <tbody>
           {users.map((user, index) => {
-            if (user.attributes.signup_request != false) {
+            if (user.attributes.signup_request != false && user.id != current_user.id) {
               return(
                 <tr className="clickable" onClick={() => UserShow(user)}>
                   <td>{user.attributes.first_name}</td>

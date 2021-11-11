@@ -398,7 +398,6 @@ const User = () => {
     var exp_skill = [];
     var count = -1;
     var skills_list = "";
-    var add_skill = "";
 
     if (user.length != 0) {
       user.relationships.master_skills.data.map((usr, index) => {

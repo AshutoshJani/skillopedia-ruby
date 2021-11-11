@@ -1,7 +1,7 @@
 class UserSerializer
   include FastJsonapi::ObjectSerializer
 
-  attributes :first_name, :last_name, :exp_year, :exp_month, :github, :login_id
+  attributes :first_name, :last_name, :exp_year, :exp_month, :github, :login_id, :signup_request
 
   belongs_to :login
 
