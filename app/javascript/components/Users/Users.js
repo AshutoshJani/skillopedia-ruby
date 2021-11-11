@@ -69,6 +69,11 @@ const Users = () => {
   }
 
   function CreateInterface() {
+    var admin = "";
+    // role.map((rl) => {
+    //   if (rl.)
+    // })
+
     return(
       <div className="container-fluid mt-4">
         <div className="row">
@@ -78,6 +83,9 @@ const Users = () => {
             <nav class="nav flex-column nav-pill nav-fill mt-4">
               <Link to="/" type="button" className="btn btn-outline-primary left-align active">Dashboard</Link>
               <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
+
+              {admin}
+
               <button type="button" className="btn btn-outline-secondary left-align bottom" onClick={logout}>Logout</button>
             </nav>
           </div>
@@ -103,52 +111,56 @@ const Users = () => {
           </tr>
         </thead>
         <tbody>
-            {users.map((user, index) => (
-              <tr className="clickable" onClick={() => UserShow(user)}>
-                <td>{user.attributes.first_name}</td>
-                <td>{user.attributes.last_name}</td>
+          {users.map((user, index) => {
+            if (user.attributes.signup_request != false) {
+              return(
+                <tr className="clickable" onClick={() => UserShow(user)}>
+                  <td>{user.attributes.first_name}</td>
+                  <td>{user.attributes.last_name}</td>
 
-                {login.map((log, index) => {
-                  if (log.attributes.id == user.attributes.login_id) {
-                    return(
-                      <td>{log.attributes.email}</td>
-                    )
-                  }
-                })}
-
-                  <td>
-                    {user.relationships.master_skills.data.map((usr, index) => {
-                      let obj = FindSkill(usr.id);
-                      if (obj != null) {
-                        return(
-                          obj.attributes.skill_name + " "
-                        )
-                      }
-                    })}
-                  </td>
-
-                {role.map((rl, index) => {
-                  if (user.relationships.master_role.data) {
-                    if (user.relationships.master_role.data.id == rl.attributes.id) {
+                  {login.map((log, index) => {
+                    if (log.attributes.id == user.attributes.login_id) {
                       return(
-                        <td>{rl.attributes.role_name}</td>
+                        <td>{log.attributes.email}</td>
                       )
                     }
-                  }
-                })}
+                  })}
 
-                  <td>
-                    {user.relationships.master_projects.data.map((usr, index) => {
-                      let obj = FindProject(usr.id);
-                      if (obj != null) {
+                    <td>
+                      {user.relationships.master_skills.data.map((usr, index) => {
+                        let obj = FindSkill(usr.id);
+                        if (obj != null) {
+                          return(
+                            obj.attributes.skill_name + " "
+                          )
+                        }
+                      })}
+                    </td>
+
+                  {role.map((rl, index) => {
+                    if (user.relationships.master_role.data) {
+                      if (user.relationships.master_role.data.id == rl.attributes.id) {
                         return(
-                          obj.attributes.proj_name + " "
+                          <td>{rl.attributes.role_name}</td>
                         )
                       }
-                    })}
-                  </td>
-              </tr>
-            ))}
+                    }
+                  })}
+
+                    <td>
+                      {user.relationships.master_projects.data.map((usr, index) => {
+                        let obj = FindProject(usr.id);
+                        if (obj != null) {
+                          return(
+                            obj.attributes.proj_name + " "
+                          )
+                        }
+                      })}
+                    </td>
+                </tr>
+              )
+            }
+          })}
         </tbody>
       </table>
     )
