@@ -1,7 +1,26 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {Link} from "react-router-dom"
 
 const Admin = () => {
+
+  const users_url = axios.get("/api/v1/users");
+  const current_user_url = axios.get("/api/v1/current_user");
+
+  const [users, setUsers] = useState([])
+  const [login, setLogin] = useState([])
+  const [current_user, setCurrentUser] = useState([])
+
+  useEffect(() => {
+
+    axios.all([users_url, current_user_url])
+    .then(axios.spread((...response) => {
+      setUsers(response[0].data.data)
+      setLogin(response[0].data.included)
+      setCurrentUser(response[1].data)
+    }))
+    .catch(response => console.log(response))
+  }, [users.length, login.length, current_user.length])
 
   function logout() {
     fetch("/logins/sign_out"
@@ -18,6 +37,16 @@ const Admin = () => {
   //   .then((result) => {
   //    window.location.href = '/';
   //  });
+  }
+
+  const handleAccept = (e) => {
+    e.preventDefault()
+    console.log(e)
+  }
+
+  const handleReject = (e) => {
+    e.preventDefault()
+    console.log(e)
   }
 
   function CreateInterface() {
@@ -37,10 +66,42 @@ const Admin = () => {
             </nav>
           </div>
           <div className="col-10 team-listing">
-            Admin Table
+            <AdminTable />
           </div>
         </div>
       </div>
+    )
+  }
+
+  function AdminTable() {
+    return(
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Email Id</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {login.map((log, index) => {
+            return users.map((usr, index) => {
+              if (log.attributes.id == usr.attributes.login_id) {
+                if (usr.attributes.signup_request == null) {
+                  return(
+                    <tr>
+                      <td>{log.attributes.email}</td>
+                      <td>
+                        <button className="btn btn-outline-success me-2" onClick={handleAccept}>Accept</button>
+                        <button className="btn btn-outline-danger" onClick={handleReject}>Reject</button>
+                      </td>
+                    </tr>
+                  )
+                }
+              }
+            })
+          })}
+        </tbody>
+      </table>
     )
   }
 
