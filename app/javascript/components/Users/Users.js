@@ -32,7 +32,7 @@ const Users = () => {
       setRole(response[2].data.data)
       setProjects(response[3].data.data)
       setCurrentUser(response[4].data)
-      setAssocRole(response[5].data)
+      setAssocRole(response[5].data.data)
     }))
     .catch(response => console.log(response))
 
@@ -73,19 +73,22 @@ const Users = () => {
 
   function CreateInterface() {
     var admin = "";
+    var usr = "";
     
-    // console.log("1")
-    // if (assoc_role.length != 0) {
-    //   console.log("2")
-    //   assoc_role.map((rl, index) => {
-    //     if (rl.id == current_user.relationships.role.data.id) {
-    //       if (rl.attributes.admin == true) {
-    //         admin = <Link to="/admin" type="button" className="btn btn-outline-primary left-align mt-2">Admin Page</Link>
-    //         console.log("inside function")
-    //       }
-    //     }
-    //   })
-    // }
+    if (assoc_role.length > 0 || assoc_role.data != undefined) {
+      users.map((us, index) => {
+        if (us.attributes.login_id == current_user.id) {
+          usr = us
+        }
+      })
+      assoc_role.map((rl, index) => {
+        if (rl.id == usr.relationships.role.data.id) {
+          if (rl.attributes.admin == true) {
+            admin = <Link to="/admin" type="button" className="btn btn-outline-primary left-align mt-2">Admin Page</Link>
+          }
+        }
+      })
+    }
 
     return(
       <div className="container-fluid mt-4">

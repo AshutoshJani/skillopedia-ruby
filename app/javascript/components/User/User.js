@@ -13,6 +13,8 @@ const User = () => {
   const projects_url = axios.get('/api/v1/master_projects');
   const current_user_url = axios.get('/api/v1/current_user');
   const skills_url = axios.get('/api/v1/skills');
+  const assoc_role_url = axios.get('/api/v1/role');
+  const users_url = axios.get('/api/v1/users');
 
   const [user, setUser] = useState([])
   const [m_skills, setMSkills] = useState([])
@@ -21,6 +23,8 @@ const User = () => {
   const [login, setLogin] = useState([])
   const [current_user, setCurrentUser] = useState([])
   const [skills, setSkills] = useState([])
+  const [assoc_role, setAssocRole] = useState([])
+  const [users, setUsers] = useState([])
 
   const [dispEP, setDispEP] = useState(false)
   const [dispAS, setDispAS] = useState(false)
@@ -70,7 +74,7 @@ const User = () => {
 
   useEffect(() => {
 
-    axios.all([user_url, m_skills_url, role_url, projects_url, current_user_url, skills_url])
+    axios.all([user_url, m_skills_url, role_url, projects_url, current_user_url, skills_url, assoc_role_url, users_url])
     .then(axios.spread((...response) => {
       setUser(response[0].data.data)
       setLogin(response[0].data.included)
@@ -79,10 +83,12 @@ const User = () => {
       setProjects(response[3].data.data)
       setCurrentUser(response[4].data)
       setSkills(response[5].data.data)
+      setAssocRole(response[6].data.data)
+      setUsers(response[7].data.data)
     }))
     .catch(response => console.log(response))
 
-  }, [user.length, login.lenght, skills.length, role.length, projects.length, current_user.length, skills.length])
+  }, [user.length, login.lenght, skills.length, role.length, projects.length, current_user.length, skills.length, assoc_role.length, users.length])
 
   function logout() {
     fetch("/logins/sign_out"
@@ -107,6 +113,26 @@ const User = () => {
       active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align active mt-2">Profile</Link>
     }
 
+    var admin = "";
+    var usr = "";
+    
+    if (assoc_role.length > 0 || assoc_role.data != undefined) {
+      if(users.length != 0) {
+        users.map((us, index) => {
+          if (us.attributes.login_id == current_user.id) {
+            usr = us
+          }
+        })
+        assoc_role.map((rl, index) => {
+          if (rl.id == usr.relationships.role.data.id) {
+            if (rl.attributes.admin == true) {
+              admin = <Link to="/admin" type="button" className="btn btn-outline-primary left-align mt-2">Admin Page</Link>
+            }
+          }
+        })
+      }
+    }
+
     return(
       <div className="container-fluid mt-4">
         <div className="row">
@@ -116,6 +142,7 @@ const User = () => {
             <nav class="nav flex-column nav-pill nav-fill mt-4">
               <Link to="/" type="button" className="btn btn-outline-primary left-align">Dashboard</Link>
               {active}
+              {admin}
               <button type="button" className="btn btn-outline-secondary left-align bottom" onClick={logout}>Logout</button>
             </nav>
           </div>

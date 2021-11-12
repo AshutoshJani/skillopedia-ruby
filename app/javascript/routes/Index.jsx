@@ -4,6 +4,7 @@ import Users from "../components/Users/Users";
 import User from "../components/User/User";
 import Waitlist from "../components/SignupRequest/Waitlist";
 import Rejected from "../components/SignupRequest/Rejected";
+import Admin from "../components/Admin/Admin";
 
 export default (
   <Router>
@@ -12,6 +13,7 @@ export default (
       <Route exact path="/users/:id" component={User} />
       <Route exact path="/waiting" component={Waitlist} />
       <Route exact path="/rejected" component={Rejected} />
+      <Route exact path="/admin" component={Admin} />
     </Switch>
   </Router>
 );
