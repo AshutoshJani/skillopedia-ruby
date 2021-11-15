@@ -26,6 +26,8 @@ class Api::V1::UsersController < ApplicationController
     m_role = MasterRole.find_by(permit_role_params)
     m_skill = MasterSkill.find_by(permit_m_skill_params)
     permitted_email = permit_login_params
+    permitted_signup = permit_signup_params
+    byebug
 
     if (user.master_role == nil) 
       user.master_role = m_role
@@ -80,6 +82,10 @@ class Api::V1::UsersController < ApplicationController
 
   def permit_m_skill_params
     params.permit(:skill_name)
+  end
+
+  def permit_signup_params
+    permit.require(:user).permit(:signup_request)
   end
 
 end

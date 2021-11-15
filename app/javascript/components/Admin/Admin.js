@@ -41,12 +41,30 @@ const Admin = () => {
 
   const handleAccept = (e) => {
     e.preventDefault()
-    console.log(e)
+    const { param } = e.target.dataset;
+    var jsonObject = {
+      signup_request: true
+    };
+    updatePostRequest(jsonObject, param)
   }
 
   const handleReject = (e) => {
     e.preventDefault()
-    console.log(e)
+    const { param } = e.target.dataset;
+    var jsonObject = {
+      signup_request: false
+    };
+    updatePostRequest(jsonObject, param)
+  }
+
+  function updatePostRequest(jsonObject, param) {
+    axios.put(`/api/v1/users/${param}`, jsonObject)
+    .then(
+      response => console.log(response),
+      location.reload(),
+      alert("User successfully updated")
+    )
+    .catch(response => console.log(response))
   }
 
   function CreateInterface() {
@@ -91,8 +109,8 @@ const Admin = () => {
                     <tr>
                       <td>{log.attributes.email}</td>
                       <td>
-                        <button className="btn btn-outline-success me-2" onClick={handleAccept}>Accept</button>
-                        <button className="btn btn-outline-danger" onClick={handleReject}>Reject</button>
+                        <button className="btn btn-outline-success me-2" onClick={handleAccept} data-param={usr.id}>Accept</button>
+                        <button className="btn btn-outline-danger" onClick={handleReject} data-param={usr.id}>Reject</button>
                       </td>
                     </tr>
                   )
