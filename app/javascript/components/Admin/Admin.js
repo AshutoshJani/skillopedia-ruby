@@ -34,9 +34,6 @@ const Admin = () => {
     .then((response) => {
       console.log(response)
     })
-  //   .then((result) => {
-  //    window.location.href = '/';
-  //  });
   }
 
   const handleAccept = (e) => {

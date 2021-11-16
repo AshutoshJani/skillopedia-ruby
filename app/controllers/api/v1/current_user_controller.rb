@@ -7,5 +7,9 @@ class Api::V1::CurrentUserController < ApplicationController
       render json: {}, status: 401
     end
   end
+
+  def logout
+    sign_out(current_login)
+  end
   
 end

@@ -16,4 +16,6 @@ class User < ApplicationRecord
   has_many :endorsee_association, foreign_key: :endorser_id, class_name: "Endorsement"
   has_many :endorsees, through: :endorsee_association
 
+  # validates :login_id, uniqueness: true
+
 end

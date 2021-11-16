@@ -55,12 +55,16 @@ const Users = () => {
   }
 
   function logout() {
-    fetch("/logins/sign_out"
+    const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content");
+    // axios.delete("/logins/sign_out", {withCredentials: true})
+    // .then(response => console.log(response))
+    fetch("/api/v1/logout"
     , {
       method: 'delete',
       headers: {
-        'Content-type': 'application/json',
-        'Accept': 'application/json'
+        'Content-type': 'application/javascript',
+        'Accept': 'application/javascript',
+        'X-CSRF-Token': csrf
         },
     })
     .then((response) => {
@@ -128,7 +132,7 @@ const Users = () => {
         </thead>
         <tbody>
           {users.map((user, index) => {
-            if (user.attributes.signup_request != false && user.id != current_user.id) {
+            if (user.attributes.signup_request == true && user.id != current_user.id) {
               return(
                 <tr className="clickable" onClick={() => UserShow(user)}>
                   <td>{user.attributes.first_name}</td>

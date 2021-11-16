@@ -26,29 +26,33 @@ class Api::V1::UsersController < ApplicationController
     m_role = MasterRole.find_by(permit_role_params)
     m_skill = MasterSkill.find_by(permit_m_skill_params)
     permitted_email = permit_login_params
-    permitted_signup = permit_signup_params
-    byebug
-
+    
     if (user.master_role == nil) 
       user.master_role = m_role
     end
 
     if (!user.master_skills.exists?(m_skill.id))
-      user.skills.create(
+      skl = user.skills.new(
         master_skill_id: m_skill.id,
         user_id: user.id
       )
-      skl = user.skills.find_by(master_skill_id: m_skill.id)
+      # skl = user.skills.find_by(master_skill_id: m_skill.id)
       skl.update(permit_skill_params)
     elsif (user.master_skills.exists?(m_skill.id))
       skl = user.skills.find_by(master_skill_id: m_skill.id)
       skl.update(permit_skill_params)
     end
 
-    user.update(permit_user_params)
+    if user.update(permit_user_params)
+      render json: user
+    end
 
     if (login.update(permitted_email)) || (user.master_role != m_role)
       user.master_role = m_role
+      render json: user
+    end
+
+    if (user.update(permit_signup_params))
       render json: user
     end
 
@@ -85,7 +89,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def permit_signup_params
-    permit.require(:user).permit(:signup_request)
+    params.require(:user).permit(:signup_request)
   end
 
 end
