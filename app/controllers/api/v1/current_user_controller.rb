@@ -10,6 +10,7 @@ class Api::V1::CurrentUserController < ApplicationController
 
   def logout
     sign_out(current_login)
+    # render component: 'User/User'
   end
   
 end

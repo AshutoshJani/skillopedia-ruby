@@ -37,6 +37,11 @@ const User = () => {
     const form = profileForm.current
     var year = form['total_exp'].value.split(" ")[0].replace('y', '')
     var month = form['total_exp'].value.split(" ")[1].replace('m', '')
+    var proj_name = []
+    var selected_proj = form['proj_name'].selectedOptions
+    for (let i=0; i<selected_proj.length; i++) {
+      proj_name.push(selected_proj[i].value);
+    } 
     var jsonObject = {
       first_name: form['first_name'].value,
       last_name: form['last_name'].value,
@@ -45,7 +50,7 @@ const User = () => {
       exp_month: parseInt(month),
       github: form['github'].value,
       role_name: form['role'].value,
-      curr_proj: form['proj_name'].value
+      proj_name: proj_name
     };
     updatePostRequest(jsonObject)
   }
