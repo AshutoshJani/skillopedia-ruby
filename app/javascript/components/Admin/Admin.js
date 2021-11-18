@@ -23,7 +23,7 @@ const Admin = () => {
   }, [users.length, login.length, current_user.length])
 
   function logout() {
-    fetch("/logins/sign_out"
+    fetch("/api/v1/logout"
     , {
       method: 'delete',
       headers: {

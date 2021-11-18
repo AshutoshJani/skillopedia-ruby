@@ -96,7 +96,7 @@ const User = () => {
   }, [user.length, login.lenght, skills.length, role.length, projects.length, current_user.length, skills.length, assoc_role.length, users.length])
 
   function logout() {
-    fetch("/logins/sign_out"
+    fetch("/api/v1/logout"
     , {
       method: 'delete',
       headers: {

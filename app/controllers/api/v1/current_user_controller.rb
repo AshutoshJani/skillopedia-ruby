@@ -10,7 +10,9 @@ class Api::V1::CurrentUserController < ApplicationController
 
   def logout
     sign_out(current_login)
-    # render component: 'User/User'
+    respond_to do |format|
+      format.js {render inline: "location.reload();" }
+    end
   end
   
 end

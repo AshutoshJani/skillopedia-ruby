@@ -26,6 +26,7 @@ class Api::V1::UsersController < ApplicationController
     m_role = MasterRole.find_by(permit_role_params)
     m_skill = MasterSkill.find_by(permit_m_skill_params)
     permitted_email = permit_login_params
+    byebug
     
     if (user.master_role == nil) 
       user.master_role = m_role
