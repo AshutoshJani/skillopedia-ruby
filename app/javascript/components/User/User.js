@@ -64,7 +64,7 @@ const User = () => {
       exp_year: form['exp_year'].value,
       exp_month: form['exp_month'].value
     };
-    updatePostRequest(jsonObject)
+    addSkillRequest(jsonObject)
   }
 
   function updatePostRequest(jsonObject) {
@@ -73,6 +73,16 @@ const User = () => {
       response => console.log(response),
       location.reload(),
       alert("User successfully updated")
+    )
+    .catch(response => console.log(response))
+  }
+
+  function addSkillRequest(jsonObject) {
+    axios.put(`/api/v1/skills/${params.id}`, jsonObject)
+    .then(
+      response => console.log(response),
+      location.reload(),
+      alert("Skill added successfully")
     )
     .catch(response => console.log(response))
   }
@@ -107,9 +117,6 @@ const User = () => {
     .then((response) => {
       console.log(response)
     })
-  //   .then((result) => {
-  //    window.location.href = '/';
-  //  });
   }
 
   function CreateInterface() {

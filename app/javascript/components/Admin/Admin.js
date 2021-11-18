@@ -55,7 +55,7 @@ const Admin = () => {
   }
 
   function updatePostRequest(jsonObject, param) {
-    axios.put(`/api/v1/users/${param}`, jsonObject)
+    axios.put(`/api/v1/current_user/${param}`, jsonObject)
     .then(
       response => console.log(response),
       location.reload(),

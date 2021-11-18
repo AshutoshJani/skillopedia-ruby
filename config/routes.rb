@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :skills
       resources :role
       get '/current_user', to: 'current_user#index'
+      put '/current_user/:id', to: 'current_user#update'
       delete '/logout', to: 'current_user#logout'
     end
   end
