@@ -86,9 +86,11 @@ const Users = () => {
         }
       })
       assoc_role.map((rl, index) => {
-        if (rl.id == usr.relationships.role.data.id) {
-          if (rl.attributes.admin == true) {
-            admin = <Link to="/admin" type="button" className="btn btn-outline-primary left-align mt-2">Admin Page</Link>
+        if (usr.relationships.role.data != undefined) {
+          if (rl.id == usr.relationships.role.data.id) {
+            if (rl.attributes.admin == true) {
+              admin = <Link to="/admin" type="button" className="btn btn-outline-primary left-align mt-2">Admin Page</Link>
+            }
           }
         }
       })

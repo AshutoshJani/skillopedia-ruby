@@ -18,6 +18,7 @@ class Api::V1::CurrentUserController < ApplicationController
 
   def logout
     sign_out(current_login)
+    # render component: 'SignupRequest/Waitlist'
     redirect_to new_login_session_path
     # respond_to do |format|
     #   format.js {render js: "location.reload();" }
