@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
+import { components } from "react_ujs";
+import Endorsement from "./Endorsement";
 
 const User = () => {
 
@@ -28,6 +30,7 @@ const User = () => {
 
   const [dispEP, setDispEP] = useState(false)
   const [dispAS, setDispAS] = useState(false)
+  const [showProf, setShowProf] = useState(true)
 
   const profileForm = useRef(null)
   const skillForm = useRef(null)
@@ -114,9 +117,12 @@ const User = () => {
         'Accept': 'application/json'
         },
     })
-    .then((response) => {
-      console.log(response)
-    })
+    .then(
+      (response) => {
+        console.log(response),
+        window.location.reload(true);
+      }
+    )
   }
 
   function CreateInterface() {
@@ -517,6 +523,33 @@ const User = () => {
     )
   }
 
+  function Section() {
+    if (showProf == true) {
+      return(
+        <div className="row mt-4">
+          <div className="col-3">
+            {(!dispEP) ?
+              <Profile />
+              :
+              <EditProfile />}
+          </div>
+          <div className="col-9">
+              <SkillsInfo />
+          </div>
+        </div>
+      )
+    }
+    else {
+      return(
+        <div className="row mt-4">
+          <div className="col-12">
+            <Endorsement />
+          </div>
+        </div>
+      )
+    }
+  }
+
   function CreateProfile() {
     var userName = "";
     if (user.length != 0) {
@@ -541,10 +574,10 @@ const User = () => {
                 <div className="col">
                   <ul class="nav justify-content-end">
                     <li class="nav-item">
-                      <button className="btn btn -link nav-link lead active">Profile</button>
+                      <button className="btn btn-link nav-link" onClick={() => {setShowProf(true);}}>Profile</button>
                     </li>
                     <li class="nav-item">
-                      <button className="btn btn-link nav-link lead">Endorsements</button>
+                      <button className="btn btn-link nav-link" onClick={() => {setShowProf(false);}}>Endorsements</button>
                     </li>
                   </ul>
                 </div>
@@ -561,19 +594,7 @@ const User = () => {
           </div>
 
           <div className="container">
-            <div className="row mt-4">
-              <div className="col-3">
-                {
-                  (!dispEP) ?
-                    <Profile />
-                  :
-                    <EditProfile />
-                }
-              </div>
-              <div className="col-9">
-                <SkillsInfo />
-              </div>
-            </div>            
+            <Section />
           </div>
 
         </div>

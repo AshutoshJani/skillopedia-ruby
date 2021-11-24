@@ -8,7 +8,7 @@ class Api::V1::EndorsementsController < ApplicationController
 
   def show 
   user = User.find(params[:id])
-  endorsements = user.endorsees
+  endorsements = user.endorsee_association
   
   render json: EndorsementSerializer.new(endorsements).serialized_json
   end

@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router";
 
 const Endorsement = () => {
 
+  const params = useParams();
   const user_url = axios.get(`/api/v1/users/${params.id}`);
   const endorsement_url = axios.get(`/api/v1/endorsements/${params.id}`);
 
   const [user, setUser] = useState([]);
+  const [users, setUsers] = useState([]);
   const [endorsement, setEndorsement] = useState([]);
 
   useEffect(() => {
     axios.all([user_url, endorsement_url])
     .then(axios.spread((...response) => {
       setUser(response[0].data.data)
-      setEndorsement(response[1].data)
+      setEndorsement(response[1].data.data)
+      console.log(endorsement)
     }))
     .catch(response => console.log(response))
   }, [user.length, endorsement.length])
@@ -24,36 +28,25 @@ const Endorsement = () => {
     }
 
   return ( 
-    <div>
-      <div className="row justify-content-md-center">
-        <div className="top-profile">
-          <div className="text-left profile-cover">
-            <h4>Profile</h4>
+    <div className="card profile-info">
+      <div className="card-header">
+        <div className="row">
+          <div className="col-12">
+            <h4>Endorsements</h4>
           </div>
         </div>
-
-        <div className="card card-profile">
-          <div className="card-body">
-            <div className="row">
-              <div className="col">
-                <h3>{userName}</h3>
-              </div>
-              <div className="col">
-                <ul class="nav justify-content-end">
-                  <li class="nav-item">
-                    <button className="btn btn -link nav-link lead active">Profile</button>
-                  </li>
-                  <li class="nav-item">
-                    <button className="btn btn-link nav-link lead">Endorsements</button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="card-body">
-            <h2>Endorsement</h2>
-          </div>
-        </div>
+      </div>
+      <div className="card-body">
+        <ul>
+          {endorsement.map((endor, index) => {
+            return(
+              <li>
+                <strong>Rating: {endor.attributes.rating}</strong>
+                <p>{endor.attributes.comment} - {endor.attributes.endorser_name}</p>
+              </li>
+            )
+          })}
+        </ul>
       </div>
     </div>
   );
