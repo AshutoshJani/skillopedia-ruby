@@ -3,7 +3,7 @@ class Api::V1::UsersController < ApplicationController
   def index
     users = User.all
     
-    render json: UserSerializer.new(users, options).serialized_json
+    render json: UserSerializer.new(users).serialized_json
   end
 
   def show

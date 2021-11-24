@@ -9,34 +9,29 @@ const Users = () => {
 
   const users_url = axios.get('/api/v1/users');
   const skills_url = axios.get('/api/v1/master_skills');
-  const role_url = axios.get('/api/v1/master_role');
   const projects_url = axios.get('/api/v1/master_projects');
   const current_user_url = axios.get('/api/v1/current_user');
   const assoc_role_url = axios.get('/api/v1/role');
 
   const [users, setUsers] = useState([])
   const [skills, setSkills] = useState([])
-  const [role, setRole] = useState([])
   const [projects, setProjects] = useState([])
-  const [login, setLogin] = useState([])
   const [current_user, setCurrentUser] = useState([])
   const [assoc_role, setAssocRole] = useState([])
 
   useEffect(() => {
 
-    axios.all([users_url, skills_url, role_url, projects_url, current_user_url, assoc_role_url])
+    axios.all([users_url, skills_url, projects_url, current_user_url, assoc_role_url])
     .then(axios.spread((...response) => {
       setUsers(response[0].data.data)
-      setLogin(response[0].data.included)
       setSkills(response[1].data.data)
-      setRole(response[2].data.data)
-      setProjects(response[3].data.data)
-      setCurrentUser(response[4].data)
-      setAssocRole(response[5].data.data)
+      setProjects(response[2].data.data)
+      setCurrentUser(response[3].data)
+      setAssocRole(response[4].data.data)
     }))
     .catch(response => console.log(response))
 
-  }, [users.length, login.length, skills.length, role.length, projects.length, current_user.length, assoc_role.length])
+  }, [users.length, skills.length, projects.length, current_user.length, assoc_role.length])
 
   function FindProject(idToSearch) {
     return projects.find(item => {
@@ -56,8 +51,6 @@ const Users = () => {
 
   function logout() {
     const csrf = document.querySelector("meta[name='csrf-token']").getAttribute("content");
-    // axios.delete("/logins/sign_out", {withCredentials: true})
-    // .then(response => console.log(response))
     fetch("/api/v1/logout"
     , {
       method: 'delete',
@@ -70,9 +63,6 @@ const Users = () => {
     .then((response) => {
       console.log(response)
     })
-  //   .then((result) => {
-  //    window.location.href = '/';
-  //  });
   }
 
   function CreateInterface() {
@@ -104,7 +94,7 @@ const Users = () => {
             <hr />
             <nav class="nav flex-column nav-pill nav-fill mt-4">
               <Link to="/" type="button" className="btn btn-outline-primary left-align active">Dashboard</Link>
-              <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
+              <Link to={`/users/${usr.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
 
               {admin}
 
@@ -140,26 +130,28 @@ const Users = () => {
                   <td>{user.attributes.first_name}</td>
                   <td>{user.attributes.last_name}</td>
 
-                  {login.map((log, index) => {
+                  <td>{user.attributes.email_id}</td>
+                  {/* {login.map((log, index) => {
                     if (log.attributes.id == user.attributes.login_id) {
                       return(
                         <td>{log.attributes.email}</td>
                       )
                     }
-                  })}
+                  })} */}
 
-                    <td>
-                      {user.relationships.master_skills.data.map((usr, index) => {
-                        let obj = FindSkill(usr.id);
-                        if (obj != null) {
-                          return(
-                            obj.attributes.skill_name + " "
-                          )
-                        }
-                      })}
-                    </td>
+                  <td>
+                    {user.relationships.master_skills.data.map((usr, index) => {
+                      let obj = FindSkill(usr.id);
+                      if (obj != null) {
+                        return(
+                          obj.attributes.skill_name + " "
+                        )
+                      }
+                    })}
+                  </td>
 
-                  {role.map((rl, index) => {
+                  <td>{user.attributes.master_role}</td>
+                  {/* {role.map((rl, index) => {
                     if (user.relationships.master_role.data) {
                       if (user.relationships.master_role.data.id == rl.attributes.id) {
                         return(
@@ -167,7 +159,7 @@ const Users = () => {
                         )
                       }
                     }
-                  })}
+                  })} */}
 
                     <td>
                       {user.relationships.master_projects.data.map((usr, index) => {
