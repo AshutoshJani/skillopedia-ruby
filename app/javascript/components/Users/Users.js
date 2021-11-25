@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.css';
 import { Link, useHistory } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 const Users = () => {
+  const cookie = new Cookies();
+  console.log(cookie.get('user_id'));
 
   const history = useHistory();
 
@@ -28,7 +31,6 @@ const Users = () => {
       setProjects(response[2].data.data)
       setCurrentUser(response[3].data)
       setAssocRole(response[4].data.data)
-      console.log(current_user)
     }))
     .catch(response => console.log(response))
 
