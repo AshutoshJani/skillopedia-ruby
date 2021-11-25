@@ -28,6 +28,7 @@ const Users = () => {
       setProjects(response[2].data.data)
       setCurrentUser(response[3].data)
       setAssocRole(response[4].data.data)
+      console.log(current_user)
     }))
     .catch(response => console.log(response))
 
@@ -110,6 +111,14 @@ const Users = () => {
   }
 
   function CreateTable() {
+    var usr = ""
+
+    users.map((us, index) => {
+      if (us.attributes.login_id == current_user.id) {
+        usr = us
+      }
+    })
+
     return(
       <table className="table table-hover">
         <thead>
@@ -124,7 +133,7 @@ const Users = () => {
         </thead>
         <tbody>
           {users.map((user, index) => {
-            if (user.attributes.signup_request == true && user.id != current_user.id) {
+            if (user.attributes.signup_request == true && user.id != usr.id) {
               return(
                 <tr className="clickable" onClick={() => UserShow(user)}>
                   <td>{user.attributes.first_name}</td>

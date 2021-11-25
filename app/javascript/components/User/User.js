@@ -22,7 +22,6 @@ const User = () => {
   const [m_skills, setMSkills] = useState([])
   const [role, setRole] = useState([])
   const [projects, setProjects] = useState([])
-  const [login, setLogin] = useState([])
   const [current_user, setCurrentUser] = useState([])
   const [skills, setSkills] = useState([])
   const [assoc_role, setAssocRole] = useState([])
@@ -95,7 +94,6 @@ const User = () => {
     axios.all([user_url, m_skills_url, role_url, projects_url, current_user_url, skills_url, assoc_role_url, users_url])
     .then(axios.spread((...response) => {
       setUser(response[0].data.data)
-      setLogin(response[0].data.included)
       setMSkills(response[1].data.data)
       setRole(response[2].data.data)
       setProjects(response[3].data.data)
@@ -106,7 +104,7 @@ const User = () => {
     }))
     .catch(response => console.log(response))
 
-  }, [user.length, login.lenght, skills.length, role.length, projects.length, current_user.length, skills.length, assoc_role.length, users.length])
+  }, [user.length, skills.length, role.length, projects.length, current_user.length, skills.length, assoc_role.length, users.length])
 
   function logout() {
     fetch("/api/v1/logout"
@@ -126,11 +124,6 @@ const User = () => {
   }
 
   function CreateInterface() {
-    var active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
-    if (params.id == current_user.id) {
-      active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align active mt-2">Profile</Link>
-    }
-
     var admin = "";
     var usr = "";
     
@@ -151,6 +144,11 @@ const User = () => {
           }
         })
       }
+    }
+
+    var active = <Link to={`/users/${usr.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
+    if (params.id == current_user.id) {
+      active = <Link to={`/users/${usr.id}`} type="button" className="btn btn-outline-primary left-align active mt-2">Profile</Link>
     }
 
     return(
@@ -194,24 +192,27 @@ const User = () => {
     if (user.length != 0) {
       first = user.attributes.first_name
       last = user.attributes.last_name
+      email = user.attributes.email_id
+      rol = user.attributes.master_role
 
-      login.map((log, index) => {
-        if (log.attributes.id == user.attributes.login_id) {
-          email = log.attributes.email
-        }
-      })
+      // login.map((log, index) => {
+      //   if (log.attributes.id == user.attributes.login_id) {
+      //     email = log.attributes.email
+      //   }
+      // })
 
       exp = `${user.attributes.exp_year}y ${user.attributes.exp_month}m`
 
       git = user.attributes.github
 
-      role.map((rl, index) => {
-        if (user.relationships.master_role.data) {
-          if (user.relationships.master_role.data.id == rl.attributes.id) {
-            rol = rl.attributes.role_name
-          }
-        }
-      })
+
+      // role.map((rl, index) => {
+      //   if (user.relationships.master_role.data) {
+      //     if (user.relationships.master_role.data.id == rl.attributes.id) {
+      //       rol = rl.attributes.role_name
+      //     }
+      //   }
+      // })
 
       user.relationships.master_projects.data.map((usr, index) => {
         let obj = FindProject(usr.id);
@@ -366,24 +367,26 @@ const User = () => {
     if (user.length != 0) {
       first = user.attributes.first_name
       last = user.attributes.last_name
+      email = user.attributes.email_id
 
-      login.map((log, index) => {
-        if (log.attributes.id == user.attributes.login_id) {
-          email = log.attributes.email
-        }
-      })
+      // login.map((log, index) => {
+      //   if (log.attributes.id == user.attributes.login_id) {
+      //     email = log.attributes.email
+      //   }
+      // })
 
       exp = user.attributes.exp_year + "y " + user.attributes.exp_month + "m"
 
       git = user.attributes.github
 
-      role.map((rl, index) => {
-        if (user.relationships.master_role.data) {
-          if (user.relationships.master_role.data.id == rl.attributes.id) {
-            rol = rl.attributes.role_name
-          }
-        }
-      })
+      rol = user.attributes.master_role
+      // role.map((rl, index) => {
+      //   if (user.relationships.master_role.data) {
+      //     if (user.relationships.master_role.data.id == rl.attributes.id) {
+      //       rol = rl.attributes.role_name
+      //     }
+      //   }
+      // })
 
       user.relationships.master_projects.data.map((usr, index) => {
         let obj = FindProject(usr.id);
@@ -552,8 +555,10 @@ const User = () => {
 
   function CreateProfile() {
     var userName = "";
+    var email = "";
     if (user.length != 0) {
       userName = user.attributes.first_name + " " + user.attributes.last_name
+      email = user.attributes.email_id
     }
 
     return(
@@ -583,13 +588,14 @@ const User = () => {
                 </div>
               </div>
               
-              {login.map((log, index) => {
+              <p>{email}</p>
+              {/* {login.map((log, index) => {
                 if (log.attributes.id == user.attributes.login_id) {
                   return(
                     <p>{log.attributes.email}</p>
                   )
                 }
-              })}
+              })} */}
             </div>
           </div>
 
