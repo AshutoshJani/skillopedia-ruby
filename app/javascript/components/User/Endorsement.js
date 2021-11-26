@@ -22,7 +22,6 @@ const Endorsement = () => {
       setUser(response[0].data.data)
       setCurrentUser(response[1].data)
       setEndorsement(response[2].data.data)
-      console.log(user, current_user)
     }))
     .catch(response => console.log(response))
   }, [user.length, current_user.length, endorsement.length])
@@ -32,8 +31,23 @@ const Endorsement = () => {
     setDispEndor(!dispEndor)
   }
 
-  function handleSave() {
-    console.log("save")
+  function handleSave(e) {
+    e.preventDefault();
+    const form = endorForm.current
+    var jsonObject = {
+      endorsee_id: user.id,
+      endorser_id: current_user.id,
+      rating: form['rating'].value,
+      comment: form['comment'].value
+    }
+
+    axios.put(`/api/v1/endorsements/${user.id}`, jsonObject)
+    .then(
+      response => console.log(response),
+      location.reload(),
+      alert("Endorsement added")
+    )
+    .catch(response => console.log(response))
   }
 
   function AddEndor() {
