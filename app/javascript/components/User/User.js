@@ -3,8 +3,10 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 import { components } from "react_ujs";
 import Endorsement from "./Endorsement";
+import Cookies from "universal-cookie";
 
 const User = () => {
+  const cookie = new Cookies();
 
   const history = useHistory();
 
@@ -13,10 +15,8 @@ const User = () => {
   const m_skills_url = axios.get('/api/v1/master_skills');
   const role_url = axios.get('/api/v1/master_role');
   const projects_url = axios.get('/api/v1/master_projects');
-  const current_user_url = axios.get('/api/v1/current_user');
+  const current_user_url = axios.get(`/api/v1/users/${cookie.get('user_id')}`);
   const skills_url = axios.get('/api/v1/skills');
-  const assoc_role_url = axios.get('/api/v1/role');
-  const users_url = axios.get('/api/v1/users');
 
   const [user, setUser] = useState([])
   const [m_skills, setMSkills] = useState([])
@@ -24,8 +24,6 @@ const User = () => {
   const [projects, setProjects] = useState([])
   const [current_user, setCurrentUser] = useState([])
   const [skills, setSkills] = useState([])
-  const [assoc_role, setAssocRole] = useState([])
-  const [users, setUsers] = useState([])
 
   const [dispEP, setDispEP] = useState(false)
   const [dispAS, setDispAS] = useState(false)
@@ -91,20 +89,18 @@ const User = () => {
 
   useEffect(() => {
 
-    axios.all([user_url, m_skills_url, role_url, projects_url, current_user_url, skills_url, assoc_role_url, users_url])
+    axios.all([user_url, m_skills_url, role_url, projects_url, current_user_url, skills_url])
     .then(axios.spread((...response) => {
       setUser(response[0].data.data)
       setMSkills(response[1].data.data)
       setRole(response[2].data.data)
       setProjects(response[3].data.data)
-      setCurrentUser(response[4].data)
+      setCurrentUser(response[4].data.data)
       setSkills(response[5].data.data)
-      setAssocRole(response[6].data.data)
-      setUsers(response[7].data.data)
     }))
     .catch(response => console.log(response))
 
-  }, [user.length, skills.length, role.length, projects.length, current_user.length, skills.length, assoc_role.length, users.length])
+  }, [user.length, skills.length, role.length, projects.length, current_user.length, skills.length])
 
   function logout() {
     fetch("/api/v1/logout"
@@ -125,30 +121,16 @@ const User = () => {
 
   function CreateInterface() {
     var admin = "";
-    var usr = "";
-    
-    if (assoc_role.length > 0 || assoc_role.data != undefined) {
-      if(users.length != 0) {
-        users.map((us, index) => {
-          if (us.attributes.login_id == current_user.id) {
-            usr = us
-          }
-        })
-        assoc_role.map((rl, index) => {
-          if (usr.relationships.role.data != undefined) {
-            if (rl.id == usr.relationships.role.data.id) {
-              if (rl.attributes.admin == true) {
-                admin = <Link to="/admin" type="button" className="btn btn-outline-primary left-align mt-2">Admin Page</Link>
-              }
-            }
-          }
-        })
+
+    if (current_user.attributes != undefined) { 
+      if (current_user.attributes.admin == "true") {
+        admin = <Link to="/admin" type="button" className="btn btn-outline-primary left-align mt-2">Admin Page</Link>
       }
     }
-
-    var active = <Link to={`/users/${usr.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
+    
+    var active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
     if (params.id == current_user.id) {
-      active = <Link to={`/users/${usr.id}`} type="button" className="btn btn-outline-primary left-align active mt-2">Profile</Link>
+      active = <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align active mt-2">Profile</Link>
     }
 
     return(
@@ -195,24 +177,9 @@ const User = () => {
       email = user.attributes.email_id
       rol = user.attributes.master_role
 
-      // login.map((log, index) => {
-      //   if (log.attributes.id == user.attributes.login_id) {
-      //     email = log.attributes.email
-      //   }
-      // })
-
       exp = `${user.attributes.exp_year}y ${user.attributes.exp_month}m`
 
       git = user.attributes.github
-
-
-      // role.map((rl, index) => {
-      //   if (user.relationships.master_role.data) {
-      //     if (user.relationships.master_role.data.id == rl.attributes.id) {
-      //       rol = rl.attributes.role_name
-      //     }
-      //   }
-      // })
 
       user.relationships.master_projects.data.map((usr, index) => {
         let obj = FindProject(usr.id);
@@ -369,24 +336,11 @@ const User = () => {
       last = user.attributes.last_name
       email = user.attributes.email_id
 
-      // login.map((log, index) => {
-      //   if (log.attributes.id == user.attributes.login_id) {
-      //     email = log.attributes.email
-      //   }
-      // })
-
       exp = user.attributes.exp_year + "y " + user.attributes.exp_month + "m"
 
       git = user.attributes.github
 
       rol = user.attributes.master_role
-      // role.map((rl, index) => {
-      //   if (user.relationships.master_role.data) {
-      //     if (user.relationships.master_role.data.id == rl.attributes.id) {
-      //       rol = rl.attributes.role_name
-      //     }
-      //   }
-      // })
 
       user.relationships.master_projects.data.map((usr, index) => {
         let obj = FindProject(usr.id);
@@ -589,13 +543,7 @@ const User = () => {
               </div>
               
               <p>{email}</p>
-              {/* {login.map((log, index) => {
-                if (log.attributes.id == user.attributes.login_id) {
-                  return(
-                    <p>{log.attributes.email}</p>
-                  )
-                }
-              })} */}
+              
             </div>
           </div>
 

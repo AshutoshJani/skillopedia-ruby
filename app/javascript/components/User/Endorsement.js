@@ -1,30 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
+import Cookies from "universal-cookie";
 
 const Endorsement = () => {
+  const cookie = new Cookies();
 
   const params = useParams();
   const user_url = axios.get(`/api/v1/users/${params.id}`);
-  const current_user_url = axios.get('/api/v1/current_user');
   const endorsement_url = axios.get(`/api/v1/endorsements/${params.id}`);
 
   const [user, setUser] = useState([]);
-  const [current_user, setCurrentUser] = useState([]);
   const [endorsement, setEndorsement] = useState([]);
   const [dispEndor, setDispEndor] = useState(false);
 
   const endorForm = useRef(null);
 
   useEffect(() => {
-    axios.all([user_url, current_user_url, endorsement_url])
+    axios.all([user_url, endorsement_url])
     .then(axios.spread((...response) => {
       setUser(response[0].data.data)
-      setCurrentUser(response[1].data)
-      setEndorsement(response[2].data.data)
+      setEndorsement(response[1].data.data)
     }))
     .catch(response => console.log(response))
-  }, [user.length, current_user.length, endorsement.length])
+  }, [user.length, endorsement.length])
 
 
   function handleAddEndor() {
@@ -36,7 +35,7 @@ const Endorsement = () => {
     const form = endorForm.current
     var jsonObject = {
       endorsee_id: user.id,
-      endorser_id: current_user.id,
+      endorser_id: cookie.get('user_id'),
       rating: form['rating'].value,
       comment: form['comment'].value
     }
@@ -77,7 +76,7 @@ const Endorsement = () => {
   if (user.length != 0) {
     userName = user.attributes.first_name + " " + user.attributes.last_name
     
-    if(user.id != current_user.id) {
+    if(user.id != cookie.get('user_id')) {
       endorseButton = <button type="button" className="btn btn-outline-info" onClick={handleAddEndor}>Endorse</button>
     }
   }

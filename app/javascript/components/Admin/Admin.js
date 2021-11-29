@@ -1,26 +1,23 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {Link} from "react-router-dom"
+import Cookies from "universal-cookie";
 
 const Admin = () => {
+  const cookie = new Cookies();
 
   const users_url = axios.get("/api/v1/users");
-  const current_user_url = axios.get("/api/v1/current_user");
 
   const [users, setUsers] = useState([])
-  const [login, setLogin] = useState([])
-  const [current_user, setCurrentUser] = useState([])
 
   useEffect(() => {
 
-    axios.all([users_url, current_user_url])
+    axios.all([users_url])
     .then(axios.spread((...response) => {
       setUsers(response[0].data.data)
-      setLogin(response[0].data.included)
-      setCurrentUser(response[1].data)
     }))
     .catch(response => console.log(response))
-  }, [users.length, login.length, current_user.length])
+  }, [users.length])
 
   function logout() {
     fetch("/api/v1/logout"
@@ -74,7 +71,7 @@ const Admin = () => {
             <hr />
             <nav class="nav flex-column nav-pill nav-fill mt-4">
               <Link to="/" type="button" className="btn btn-outline-primary left-align">Dashboard</Link>
-              <Link to={`/users/${current_user.id}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
+              <Link to={`/users/${cookie.get('user_id')}`} type="button" className="btn btn-outline-primary left-align mt-2">Profile</Link>
               <Link to="/admin" type="button" className="btn btn-outline-primary left-align active mt-2">Admin Page</Link>
 
               <button type="button" className="btn btn-outline-secondary left-align bottom" onClick={logout}>Logout</button>
@@ -98,22 +95,18 @@ const Admin = () => {
           </tr>
         </thead>
         <tbody>
-          {login.map((log, index) => {
-            return users.map((usr, index) => {
-              if (log.attributes.id == usr.attributes.login_id) {
-                if (usr.attributes.signup_request == null) {
-                  return(
-                    <tr>
-                      <td>{log.attributes.email}</td>
-                      <td>
-                        <button className="btn btn-outline-success me-2" onClick={handleAccept} data-param={usr.id}>Accept</button>
-                        <button className="btn btn-outline-danger" onClick={handleReject} data-param={usr.id}>Reject</button>
-                      </td>
-                    </tr>
-                  )
-                }
-              }
-            })
+          {users.map((usr, index) => {
+            if (usr.attributes.signup_request == null) {
+              return(
+                <tr>
+                  <td>{usr.attributes.email_id}</td>
+                  <td>
+                    <button className="btn btn-outline-success me-2" onClick={handleAccept} data-param={usr.id}>Accept</button>
+                    <button className="btn btn-outline-danger" onClick={handleReject} data-param={usr.id}>Reject</button>
+                  </td>
+                </tr>
+              )
+            }
           })}
         </tbody>
       </table>

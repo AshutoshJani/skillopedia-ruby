@@ -11,6 +11,10 @@ class UserSerializer
     "#{obj.master_role.role_name}" if !obj.master_role.nil?
   end
 
+  attribute :admin do |obj|
+    "#{obj.role.admin}" if !obj.role.nil?
+  end
+
   belongs_to :login
 
   has_many :skills
